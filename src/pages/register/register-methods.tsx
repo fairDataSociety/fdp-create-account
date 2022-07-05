@@ -2,7 +2,6 @@ import React from "react";
 import { styled } from "@mui/system";
 import intl from "react-intl-universal";
 import { Button } from "@mui/material";
-import { MarginLeftAuto } from "../../components/utils/utils";
 
 const Wrapper = styled("div")(({ theme }) => ({
   display: "flex",
@@ -35,24 +34,42 @@ const RegisterMethods = ({
         variant="contained"
         color="primary"
         size="large"
-        sx={buttonStyle}
+        sx={{
+          ...buttonStyle,
+          width: {
+            sm: "200px",
+            xs: "100%",
+          },
+        }}
         onClick={onNewAccountSelect}
         data-testid="register-new"
       >
         {intl.get("NEW_ACCOUNT")}
       </Button>
-      <MarginLeftAuto>
-        <Button
-          variant="contained"
-          color="secondary"
-          size="large"
-          sx={buttonStyle}
-          onClick={onExistingAccountSelect}
-          data-testid="existing-account"
-        >
-          {intl.get("EXISTING_ACCOUNT")}
-        </Button>
-      </MarginLeftAuto>
+      <Button
+        variant="contained"
+        color="secondary"
+        size="large"
+        sx={{
+          ...buttonStyle,
+          width: {
+            sm: "200px",
+            xs: "100%",
+          },
+          marginLeft: {
+            sm: "auto",
+            xs: 0,
+          },
+          marginTop: {
+            sm: 0,
+            xs: "20px",
+          },
+        }}
+        onClick={onExistingAccountSelect}
+        data-testid="existing-account"
+      >
+        {intl.get("EXISTING_ACCOUNT")}
+      </Button>
     </Wrapper>
   );
 };
