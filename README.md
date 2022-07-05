@@ -30,6 +30,12 @@ Before running tests start the [fdp-play](https://github.com/fairDataSociety/fdp
 fdp-play start
 ```
 
+Then start a local web server:
+
+```bash
+npm start
+```
+
 Then run tests:
 
 ```bash
