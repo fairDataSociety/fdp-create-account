@@ -10,6 +10,12 @@ To configure the application, create an `.env` file in the root directory. Set t
 - **REACT_APP_BEE_DEBUG_URL** - Address of bee debug API
 - **REACT_APP_RPC_URL** - Address of RPC provider
 
+## Testnet ENS deployed
+FDSRegistrar deployed to: 0xF11180fC2D159190a161d636f7AD1b2A05657323
+ENSRegistry deployed to: 0xd55cc6b1070c4106bbAB2DC7a4C23A20CD3528a0
+PublicResolver deployed to: 0x920A3959c37036B59AA21cD8f259e91830CA8BF8
+
+
 > **_NOTE_:** Check the `.default.env` file for more information
 
 ## Build
