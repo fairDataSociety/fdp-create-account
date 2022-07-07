@@ -9,6 +9,11 @@ To configure the application, create an `.env` file in the root directory. Set t
 - **REACT_APP_BEE_URL** - Address of a bee node
 - **REACT_APP_BEE_DEBUG_URL** - Address of bee debug API
 - **REACT_APP_RPC_URL** - Address of RPC provider
+- **REACT_APP_ENS_REGISTRY_ADDRESS** - ENS Registry contract address
+- **REACT_APP_SUBDOMAIN_REGISTRAR_ADDRESS** - Subdomain registrar contract address
+- **REACT_APP_PUBLIC_RESOLVER_ADDRESS** - Public Resolver contract address
+
+If the latest `fdp-contract` image is used as RPC provider, then contract addresses can be omitted.
 
 > **_NOTE_:** Check the `.default.env` file for more information
 

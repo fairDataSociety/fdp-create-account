@@ -5,13 +5,14 @@ import {
   RegisterData,
   RegisterResponse,
 } from "../model/internal-messages.model";
-
-console.log(process.env.REACT_APP_BEE_URL);
+import { getEnsConfig } from "../utils/ens.utils";
 
 const fdp = new FdpStorage(
   process.env.REACT_APP_BEE_URL as string,
-  process.env.REACT_APP_BEE_DEBUG_URL as string
+  process.env.REACT_APP_BEE_DEBUG_URL as string,
+  getEnsConfig()
 );
+
 const provider = new providers.JsonRpcProvider(
   process.env.REACT_APP_RPC_URL as string
 );
