@@ -8,7 +8,7 @@ import UsernamePassword from "./username-password";
 import MnemonicConfirmation from "./mnemonic-confirmation";
 import ErrorMessage from "../../components/error-message/error-message.component";
 import { RegisterData } from "../../model/internal-messages.model";
-import { generateWallet, register } from "../../services/account.service";
+// import { generateWallet, register } from "../../services/account.service";
 import WaitingPayment from "./waiting-payment";
 import { Account, Mnemonic } from "../../model/general.types";
 import MnemonicComponent from "./mnemonic";
@@ -16,6 +16,7 @@ import { FlexColumnDiv } from "../../components/utils/utils";
 import Wrapper from "../../components/wrapper/wrapper.component";
 import RegisterMethods from "./register-methods";
 import EnterMnemonic from "./enter-mnemonic";
+import { useFdpStorage } from "../../context/fdp.context";
 
 enum Steps {
   UsernamePassword,
@@ -49,6 +50,9 @@ const emptyState: RegistrationState = {
 };
 
 const Register = () => {
+  // using FDP Storage
+  const { fdpClient } = useFdpStorage();
+
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
   const [data, setData] = useState<RegistrationState>(emptyState);
 
@@ -71,7 +75,12 @@ const Register = () => {
 
   const getMnemonic = async () => {
     try {
-      const response = await generateWallet();
+      const wallet = await fdpClient.account.createWallet();
+      const response = {
+        account: wallet.address,
+        privateKey: wallet.privateKey,
+        mnemonic: wallet.mnemonic.phrase,
+      };
       setData({
         ...data,
         ...response,
@@ -111,12 +120,8 @@ const Register = () => {
     try {
       const { username, password, privateKey, mnemonic } = data;
 
-      await register({
-        username,
-        password,
-        privateKey,
-        mnemonic,
-      });
+      await fdpClient.account.register(username, password);
+
       setStep(Steps.Complete);
     } catch (error) {
       console.error(error);
