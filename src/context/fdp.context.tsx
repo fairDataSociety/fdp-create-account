@@ -20,7 +20,7 @@ const FdpStorageContext = createContext<FdpStorageContextI>({
   fdpClient,
 });
 
-function FdpStorageProvider(props: FdpStorageContextProps) {
+export function FdpStorageProvider(props: FdpStorageContextProps) {
   const { children } = props;
 
   return (
@@ -30,9 +30,8 @@ function FdpStorageProvider(props: FdpStorageContextProps) {
   );
 }
 
-function useFdpStorage() {
+export function useFdpStorage() {
   return useContext(FdpStorageContext);
 }
 
 export default FdpStorageContext;
-export { FdpStorageProvider, useFdpStorage };

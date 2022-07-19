@@ -36,7 +36,6 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
 
     // TODO check if password contains lowercase and uppercase letters
   };
-  // using FDP Storage
   const { fdpClient } = useFdpStorage();
 
   const onSubmitInternal = async ({

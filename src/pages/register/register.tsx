@@ -8,7 +8,6 @@ import UsernamePassword from "./username-password";
 import MnemonicConfirmation from "./mnemonic-confirmation";
 import ErrorMessage from "../../components/error-message/error-message.component";
 import { RegisterData } from "../../model/internal-messages.model";
-// import { generateWallet, register } from "../../services/account.service";
 import WaitingPayment from "./waiting-payment";
 import { Account, Mnemonic } from "../../model/general.types";
 import MnemonicComponent from "./mnemonic";
@@ -50,7 +49,6 @@ const emptyState: RegistrationState = {
 };
 
 const Register = () => {
-  // using FDP Storage
   const { fdpClient } = useFdpStorage();
 
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
