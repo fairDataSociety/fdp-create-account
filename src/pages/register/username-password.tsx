@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Button, TextField } from "@mui/material";
 import Form from "../../components/form/form.component";
 import { RegisterData } from "../../model/internal-messages.model";
-import { isUsernameAvailable } from "../../services/account.service";
+import { useFdpStorage } from "../../context/fdp.context";
 
 export interface UsernamePasswordProps {
   onSubmit: (data: RegisterData) => void;
@@ -36,6 +36,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
 
     // TODO check if password contains lowercase and uppercase letters
   };
+  const { fdpClient } = useFdpStorage();
 
   const onSubmitInternal = async ({
     username,
@@ -52,7 +53,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
       setLoading(true);
       setNetworkError(false);
 
-      const usernameAvailable = await isUsernameAvailable(username);
+      const usernameAvailable = await fdpClient.account.ens.isUsernameAvailable(username);
 
       if (!usernameAvailable) {
         return setUsernameTaken(true);
