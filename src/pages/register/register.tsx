@@ -4,6 +4,7 @@ import intl from "react-intl-universal";
 import Title from "../../components/title/title.component";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import DoneAll from "@mui/icons-material/DoneAll";
+import { Wallet } from "ethers";
 import UsernamePassword from "./username-password";
 import MnemonicConfirmation from "./mnemonic-confirmation";
 import ErrorMessage from "../../components/error-message/error-message.component";
@@ -117,6 +118,20 @@ const Register = () => {
   const registerUser = async () => {
     try {
       const { username, password, privateKey, mnemonic } = data;
+
+      let wallet;
+
+      if (privateKey) {
+        wallet = new Wallet(privateKey);
+      } else if (mnemonic) {
+        wallet = Wallet.fromMnemonic(mnemonic);
+      } else {
+        throw new Error(
+          "Private key or mnemonic must be set in order to register account"
+        );
+      }
+
+      fdpClient.account.setActiveAccount(wallet);
 
       await fdpClient.account.register(username, password);
 
