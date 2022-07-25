@@ -7,7 +7,7 @@ export function getEnsConfig(): any {
   if (ensRegistry && publicResolver && subdomainRegistrar) {
     return {
       ensOptions: {
-        performanceChecks: true,
+        performChecks: true,
         rpcUrl: process.env.REACT_APP_RPC_URL,
         contractAddresses: {
           ensRegistry,
@@ -15,8 +15,9 @@ export function getEnsConfig(): any {
           subdomainRegistrar,
         },
       },
+      ensDomain: "fds",
     };
   }
-  
+
   return undefined;
 }

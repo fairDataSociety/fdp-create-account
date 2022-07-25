@@ -5,7 +5,7 @@ import { getEnsConfig } from "../utils/ens.utils";
 const fdpClient = new FdpStorage(
   process.env.REACT_APP_BEE_URL as string,
   process.env.REACT_APP_BEE_DEBUG_URL as string,
-  // getEnsConfig()
+  getEnsConfig()
 );
 
 interface FdpStorageContextProps {
