@@ -32,5 +32,12 @@
   "GENERAL_ERROR_MESSAGE": "Couldn't complete request at the moment.",
   "USERNAME_NOT_AVAILABLE": "Username is not available",
   "CANNOT_CHECK_USERNAME": "Cannot check username. Network currently unavailable",
-  "CONFIRM": "Confirm"
+  "CONFIRM": "Confirm",
+  "MIGRATION_LINK": "Already have an old account? You can migrate it to the new protocol here.",
+  "REGISTRATION_LINK": "Register completely new account.",
+  "OLD_USERNAME_LABEL": "Old Username",
+  "NEW_USERNAME_LABEL": "New Username",
+  "MIGRATE": "Migrate",
+  "MIGRATE_ACCOUNT": "Migrate Account",
+  "MIGRATE_ACCOUNT_INSTRUCTIONS": "Migrate your old account to start using new features."
 }

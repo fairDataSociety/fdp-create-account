@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 import intl from "react-intl-universal";
 import { useForm } from "react-hook-form";
-import { Button, TextField } from "@mui/material";
-import Form from "../../components/form/form.component";
-import { RegisterData } from "../../model/internal-messages.model";
 import { useFdpStorage } from "../../context/fdp.context";
-import { isPasswordValid } from "../../utils/ens.utils";
+import Form from "../../components/form/form.component";
+import { MigrateData } from "../../model/internal-messages.model";
+import { Button, TextField } from "@mui/material";
 
-export interface UsernamePasswordProps {
-  onSubmit: (data: RegisterData) => void;
+export interface MigrateFormProps {
+  onSubmit: (data: MigrateData) => void;
 }
 
 interface FormFields {
-  username: string;
+  oldUsername: string;
+  newUsername: string;
   password: string;
-  networkId: string;
 }
 
-const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
+const MigrateForm = ({ onSubmit }: MigrateFormProps) => {
   const {
     register,
     handleSubmit,
@@ -30,17 +29,18 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const validatePassword = (password: string): string | null => {
-    if (!isPasswordValid(password)) {
-      return intl.get("PASSWORD_TOO_SHORT");
-    }
+    // TODO Might not needed for migration
+    // if (!isPasswordValid(password)) {
+    //   return intl.get("PASSWORD_TOO_SHORT");
+    // }
 
     return null;
   };
 
   const onSubmitInternal = async ({
-    username,
+    oldUsername,
+    newUsername,
     password,
-    networkId,
   }: FormFields) => {
     try {
       const passError = validatePassword(password);
@@ -53,7 +53,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
       setNetworkError(false);
 
       const usernameAvailable = await fdpClient.account.ens.isUsernameAvailable(
-        username
+        oldUsername
       );
 
       if (!usernameAvailable) {
@@ -61,9 +61,9 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
       }
 
       onSubmit({
-        username,
+        oldUsername,
+        newUsername,
         password,
-        privateKey: "",
       });
     } catch (error) {
       setNetworkError(true);
@@ -74,7 +74,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
   };
 
   const getUsernameError = () => {
-    if (errors.username) {
+    if (errors.oldUsername) {
       return intl.get("USERNAME_REQUIRED_ERROR");
     }
 
@@ -93,13 +93,24 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         label={intl.get("USERNAME")}
         variant="outlined"
         fullWidth
-        {...register("username", { required: true })}
-        onChange={() => setUsernameTaken(false)}
+        {...register("oldUsername", { required: true })}
         disabled={loading}
-        error={Boolean(errors.username || usernameTaken || networkError)}
+        error={Boolean(errors.oldUsername || usernameTaken || networkError)}
         helperText={getUsernameError()}
         data-testid="username"
       />
+      {/* TODO There is no option to provide new username for now */}
+      {/* <TextField
+        label={intl.get("NEW_USERNAME_LABEL")}
+        variant="outlined"
+        fullWidth
+        {...register("newUsername", { required: true })}
+        onChange={() => setUsernameTaken(false)}
+        disabled={loading}
+        error={Boolean(errors.newUsername || usernameTaken || networkError)}
+        helperText={getUsernameError()}
+        data-testid="username"
+      /> */}
       <TextField
         label={intl.get("PASSWORD")}
         variant="outlined"
@@ -125,10 +136,10 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
           marginTop: "50px",
         }}
       >
-        {intl.get("REGISTER")}
+        {intl.get("MIGRATE")}
       </Button>
     </Form>
   );
 };
 
-export default UsernamePassword;
+export default MigrateForm;
