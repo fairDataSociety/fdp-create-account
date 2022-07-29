@@ -39,5 +39,7 @@
   "NEW_USERNAME_LABEL": "New Username",
   "MIGRATE": "Migrate",
   "MIGRATE_ACCOUNT": "Migrate Account",
-  "MIGRATE_ACCOUNT_INSTRUCTIONS": "Migrate your old account to start using new features."
+  "MIGRATE_ACCOUNT_INSTRUCTIONS": "Migrate your old account to start using new features.",
+  "MIGRATE_SAME_USERNAME": "Migrate using the same username.",
+  "MIGRATION_COMPLETE": "Congratulations, you have successfully migrated your account."
 }

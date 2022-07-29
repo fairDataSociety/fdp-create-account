@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import intl from "react-intl-universal";
 import { styled } from "@mui/system";
+import axios from "axios";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import DoneAll from "@mui/icons-material/DoneAll";
 import MigrateForm from "./migrate-form";
@@ -10,14 +11,9 @@ import Link from "../../components/link/link";
 import RouteCodes from "../../routes/route-codes";
 import { FlexColumnDiv, FlexDiv } from "../../components/utils/utils";
 import ErrorMessage from "../../components/error-message/error-message.component";
-import { MigrateData } from "../../model/internal-messages.model";
-import { useFdpStorage } from "../../context/fdp.context";
-import EnterMnemonic from "../register/enter-mnemonic";
-import { Mnemonic } from "../../model/general.types";
 
 enum Steps {
   UsernamePassword,
-  EnterMnemonic,
   Complete,
   Loading,
   Error,
@@ -29,48 +25,50 @@ const LoaderWrapperDiv = styled("div")({
   display: "flex",
 });
 
-interface MigrationState extends MigrateData {
-  mnemonic: Mnemonic;
-}
-
-const emptyState: MigrationState = {
-  oldUsername: "",
-  newUsername: "",
-  password: "",
-  mnemonic: "",
-};
-
 const Migrate = () => {
-  const { fdpClient } = useFdpStorage();
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
-  const [data, setData] = useState<MigrationState>(emptyState);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const migrate = async () => {
+  const migrate = async ({
+    oldUsername,
+    newUsername,
+    password,
+  }: {
+    oldUsername: string;
+    newUsername: string;
+    password: string;
+  }) => {
     try {
-      const { oldUsername, password, mnemonic } = data;
+      setStep(Steps.Loading);
 
-      await fdpClient.account.migrate(oldUsername, password, { mnemonic });
+      await axios.post(
+        `${process.env.REACT_APP_FAIROS_URL}/v1/user/login`,
+        {
+          user_name: oldUsername,
+          password,
+        },
+        { withCredentials: true }
+      );
+
+      await axios.post(
+        `${process.env.REACT_APP_FAIROS_URL}/v2/user/migrate`,
+        {
+          user_name: newUsername,
+          password,
+        },
+        { withCredentials: true }
+      );
 
       setStep(Steps.Complete);
     } catch (error) {
       console.error(error);
+      if (
+        (error as any)?.response?.data?.message?.includes("invalid password")
+      ) {
+        setErrorMessage(intl.get("INVALID_PASSWORD"));
+      }
       setStep(Steps.Error);
     }
-  };
-
-  const onUsernamePasswordSubmit = (migrateData: MigrateData) => {
-    setData({
-      ...data,
-      ...migrateData,
-    });
-    setStep(Steps.EnterMnemonic);
-  };
-
-  const onMnemonicEntered = (mnemonic: string) => {
-    setData({
-      ...data,
-      mnemonic,
-    });
   };
 
   const getStepInstructionMessage = (step: Steps): string => {
@@ -78,26 +76,17 @@ const Migrate = () => {
 
     if (step === Steps.UsernamePassword) {
       message = "MIGRATE_ACCOUNT_INSTRUCTIONS";
-    } else if (step === Steps.EnterMnemonic) {
-      message = "EXISTING_ACCOUNT_INSTRUCTIONS";
     } else if (step === Steps.Complete) {
-      message = "REGISTRATION_COMPLETE";
+      message = "MIGRATION_COMPLETE";
     }
 
     return message ? intl.get(message) : "";
   };
 
   const reset = () => {
-    setData(emptyState);
+    setErrorMessage(null);
     setStep(Steps.UsernamePassword);
   };
-
-  useEffect(() => {
-    if (data.mnemonic && step === Steps.EnterMnemonic) {
-      setStep(Steps.Loading);
-      migrate();
-    }
-  }, [data.mnemonic]);
 
   return (
     <Wrapper>
@@ -113,16 +102,13 @@ const Migrate = () => {
       </Typography>
       {step === Steps.UsernamePassword && (
         <>
-          <MigrateForm onSubmit={onUsernamePasswordSubmit} />
+          <MigrateForm onSubmit={migrate} />
           <FlexDiv>
             <Link to={RouteCodes.register}>
               {intl.get("REGISTRATION_LINK")}
             </Link>
           </FlexDiv>
         </>
-      )}
-      {step === Steps.EnterMnemonic && (
-        <EnterMnemonic onSubmit={onMnemonicEntered} />
       )}
       {step === Steps.Complete && (
         <FlexColumnDiv>
@@ -136,7 +122,9 @@ const Migrate = () => {
       )}
       {step === Steps.Error && (
         <LoaderWrapperDiv sx={{ flexDirection: "column" }}>
-          <ErrorMessage>{intl.get("REGISTRATION_ERROR")}</ErrorMessage>
+          <ErrorMessage>
+            {errorMessage || intl.get("REGISTRATION_ERROR")}
+          </ErrorMessage>
           <Button onClick={reset} sx={{ marginTop: "20px" }}>
             {intl.get("TRY_AGAIN")}
           </Button>

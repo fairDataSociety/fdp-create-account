@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useFdpStorage } from "../../context/fdp.context";
 import Form from "../../components/form/form.component";
 import { MigrateData } from "../../model/internal-messages.model";
-import { Button, TextField } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, TextField } from "@mui/material";
 
 export interface MigrateFormProps {
   onSubmit: (data: MigrateData) => void;
@@ -26,16 +26,7 @@ const MigrateForm = ({ onSubmit }: MigrateFormProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [usernameTaken, setUsernameTaken] = useState<boolean>(false);
   const [networkError, setNetworkError] = useState<boolean>(false);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-
-  const validatePassword = (password: string): string | null => {
-    // TODO Might not needed for migration
-    // if (!isPasswordValid(password)) {
-    //   return intl.get("PASSWORD_TOO_SHORT");
-    // }
-
-    return null;
-  };
+  const [sameUsername, setSameUsername] = useState<boolean>(true);
 
   const onSubmitInternal = async ({
     oldUsername,
@@ -43,17 +34,13 @@ const MigrateForm = ({ onSubmit }: MigrateFormProps) => {
     password,
   }: FormFields) => {
     try {
-      const passError = validatePassword(password);
-
-      if (passError) {
-        return setPasswordError(passError);
-      }
-
       setLoading(true);
       setNetworkError(false);
 
+      const username = sameUsername ? oldUsername : newUsername;
+
       const usernameAvailable = await fdpClient.account.ens.isUsernameAvailable(
-        oldUsername
+        username
       );
 
       if (!usernameAvailable) {
@@ -62,7 +49,7 @@ const MigrateForm = ({ onSubmit }: MigrateFormProps) => {
 
       onSubmit({
         oldUsername,
-        newUsername,
+        newUsername: username,
         password,
       });
     } catch (error) {
@@ -74,6 +61,10 @@ const MigrateForm = ({ onSubmit }: MigrateFormProps) => {
   };
 
   const getUsernameError = () => {
+    if (sameUsername) {
+      return null;
+    }
+
     if (errors.oldUsername) {
       return intl.get("USERNAME_REQUIRED_ERROR");
     }
@@ -90,27 +81,39 @@ const MigrateForm = ({ onSubmit }: MigrateFormProps) => {
   return (
     <Form onSubmit={handleSubmit(onSubmitInternal)}>
       <TextField
-        label={intl.get("USERNAME")}
+        label={intl.get("OLD_USERNAME_LABEL")}
         variant="outlined"
         fullWidth
         {...register("oldUsername", { required: true })}
         disabled={loading}
-        error={Boolean(errors.oldUsername || usernameTaken || networkError)}
-        helperText={getUsernameError()}
-        data-testid="username"
+        error={Boolean(errors.oldUsername)}
+        helperText={errors.oldUsername && intl.get("USERNAME_REQUIRED_ERROR")}
+        data-testid="old-username"
       />
-      {/* TODO There is no option to provide new username for now */}
-      {/* <TextField
+      <FormControlLabel
+        control={
+          <Checkbox
+            defaultChecked
+            value={sameUsername}
+            onChange={() => setSameUsername(!sameUsername)}
+            disabled={loading}
+          />
+        }
+        label={intl.get("MIGRATE_SAME_USERNAME")}
+      />
+      <TextField
         label={intl.get("NEW_USERNAME_LABEL")}
         variant="outlined"
         fullWidth
-        {...register("newUsername", { required: true })}
+        {...register("newUsername", { required: !sameUsername })}
         onChange={() => setUsernameTaken(false)}
-        disabled={loading}
-        error={Boolean(errors.newUsername || usernameTaken || networkError)}
+        disabled={loading || sameUsername}
+        error={Boolean(
+          !sameUsername && (errors.newUsername || usernameTaken || networkError)
+        )}
         helperText={getUsernameError()}
         data-testid="username"
-      /> */}
+      />
       <TextField
         label={intl.get("PASSWORD")}
         variant="outlined"
@@ -118,11 +121,8 @@ const MigrateForm = ({ onSubmit }: MigrateFormProps) => {
         fullWidth
         {...register("password", { required: true })}
         disabled={loading}
-        error={Boolean(errors.password || passwordError)}
-        helperText={
-          passwordError ||
-          (errors.password && intl.get("PASSWORD_REQUIRED_ERROR"))
-        }
+        error={Boolean(errors.password)}
+        helperText={errors.password && intl.get("PASSWORD_REQUIRED_ERROR")}
         data-testid="password"
       />
       <Button
