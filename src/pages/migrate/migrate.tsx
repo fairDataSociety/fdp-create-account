@@ -62,10 +62,14 @@ const Migrate = () => {
       setStep(Steps.Complete);
     } catch (error) {
       console.error(error);
-      if (
-        (error as any)?.response?.data?.message?.includes("invalid password")
-      ) {
+      const message = (error as any)?.response?.data?.message;
+
+      if (message?.includes("invalid password")) {
         setErrorMessage(intl.get("INVALID_PASSWORD"));
+      } else if (message?.includes("insufficient funds")) {
+        setErrorMessage(intl.get("MIGRATION_ERROR_NO_FUNDS"));
+      } else if (message) {
+        setErrorMessage(intl.get("MIGRATION_ERROR") + message);
       }
       setStep(Steps.Error);
     }
