@@ -38,6 +38,8 @@ const Migrate = () => {
     newUsername: string;
     password: string;
   }) => {
+    let address: string | null = null;
+
     try {
       setStep(Steps.Loading);
 
@@ -49,6 +51,14 @@ const Migrate = () => {
         },
         { withCredentials: true }
       );
+
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_FAIROS_URL}/v1/user/export`,
+        {},
+        { withCredentials: true }
+      );
+
+      address = data?.address;
 
       await axios.post(
         `${process.env.REACT_APP_FAIROS_URL}/v2/user/migrate`,
@@ -67,7 +77,7 @@ const Migrate = () => {
       if (message?.includes("invalid password")) {
         setErrorMessage(intl.get("INVALID_PASSWORD"));
       } else if (message?.includes("insufficient funds")) {
-        setErrorMessage(intl.get("MIGRATION_ERROR_NO_FUNDS"));
+        setErrorMessage(intl.get("MIGRATION_ERROR_NO_FUNDS") + address);
       } else if (message) {
         setErrorMessage(intl.get("MIGRATION_ERROR") + message);
       }

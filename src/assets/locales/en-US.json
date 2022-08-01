@@ -42,6 +42,6 @@
   "MIGRATE_ACCOUNT_INSTRUCTIONS": "Migrate your old account to start using new features.",
   "MIGRATE_SAME_USERNAME": "Migrate using the same username.",
   "MIGRATION_COMPLETE": "Congratulations, you have successfully migrated your account.",
-  "MIGRATION_ERROR_NO_FUNDS": "There is no sufficient funds for migration.",
+  "MIGRATION_ERROR_NO_FUNDS": "There is no sufficient funds for migration. You should fund your address:",
   "MIGRATION_ERROR": "Migration failed with the error: "
 }
