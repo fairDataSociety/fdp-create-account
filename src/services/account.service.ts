@@ -1,15 +1,11 @@
 import { BigNumber, providers, Wallet } from "ethers";
 
 import { Account } from "../model/general.types";
-import {
-  RegisterData,
-  RegisterResponse,
-} from "../model/internal-messages.model";
+import { RegisterResponse } from "../model/internal-messages.model";
 
 const provider = new providers.JsonRpcProvider(
   process.env.REACT_APP_RPC_URL as string
 );
-
 
 export async function generateWallet(): Promise<RegisterResponse> {
   try {
