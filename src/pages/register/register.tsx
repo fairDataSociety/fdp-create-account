@@ -17,6 +17,8 @@ import Wrapper from "../../components/wrapper/wrapper.component";
 import RegisterMethods from "./register-methods";
 import EnterMnemonic from "./enter-mnemonic";
 import { useFdpStorage } from "../../context/fdp.context";
+import RouteCodes from "../../routes/route-codes";
+import Link from "../../components/link/link";
 
 enum Steps {
   UsernamePassword,
@@ -195,7 +197,10 @@ const Register = () => {
         {getStepInstructionMessage(step)}
       </Typography>
       {step === Steps.UsernamePassword && (
-        <UsernamePassword onSubmit={onUsernamePasswordSubmit} />
+        <>
+          <UsernamePassword onSubmit={onUsernamePasswordSubmit} />
+          <Link to={RouteCodes.migrate}>{intl.get("MIGRATION_LINK")}</Link>
+        </>
       )}
       {step === Steps.ChooseMethod && (
         <RegisterMethods
