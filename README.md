@@ -53,3 +53,17 @@ Then run tests:
 ```bash
 npm run test:puppeteer
 ```
+
+To buy postage stamp for fdp-play
+```bash
+ curl -s -XPOST http://localhost:1635/stamps/10000000/18
+```
+
+you will get respons like: ```{"batchID":"ea088d3f65f0f3ac2c3c6684b5e40e80e6ea0234e59b64aa156a9bfb7064a66c"}``` 
+
+To fund account from fdp-play
+```bash
+ node ./scripts/fund-new-account.js <account_address> <amount>
+```
+
+

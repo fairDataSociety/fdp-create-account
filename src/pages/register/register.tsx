@@ -186,12 +186,12 @@ const Register = () => {
 
   return (
     <Wrapper>
-      <Title>{intl.get("REGISTER_TITLE")}</Title>
+      <Title>{intl.get('REGISTER_TITLE')}</Title>
       <Typography
         variant="body1"
         align="center"
         sx={{
-          marginTop: "20px",
+          marginTop: '20px',
         }}
       >
         {getStepInstructionMessage(step)}
@@ -199,7 +199,7 @@ const Register = () => {
       {step === Steps.UsernamePassword && (
         <>
           <UsernamePassword onSubmit={onUsernamePasswordSubmit} />
-          <Link to={RouteCodes.migrate}>{intl.get("MIGRATION_LINK")}</Link>
+          <Link to={RouteCodes.migrate}>{intl.get('MIGRATION_LINK')}</Link>
         </>
       )}
       {step === Steps.ChooseMethod && (
@@ -226,27 +226,31 @@ const Register = () => {
           onPaymentDetected={onPaymentConfirmed}
           onError={onError}
         />
+        // TODO: Add error handling and display error message
+        // TODO: add chain information
+        // TODO: add loading spinner
       )}
       {step === Steps.Complete && (
         <FlexColumnDiv>
-          <DoneAll sx={{ margin: "auto" }} data-testid="complete" />
+          <DoneAll sx={{ margin: 'auto' }} data-testid="complete" />
         </FlexColumnDiv>
+        // TODO: add account information (address, username, balance)
       )}
       {step === Steps.Loading && (
         <LoaderWrapperDiv>
-          <CircularProgress sx={{ margin: "auto" }} />
+          <CircularProgress sx={{ margin: 'auto' }} />
         </LoaderWrapperDiv>
       )}
       {step === Steps.Error && (
-        <LoaderWrapperDiv sx={{ flexDirection: "column" }}>
-          <ErrorMessage>{intl.get("REGISTRATION_ERROR")}</ErrorMessage>
-          <Button onClick={reset} sx={{ marginTop: "20px" }}>
-            {intl.get("TRY_AGAIN")}
+        <LoaderWrapperDiv sx={{ flexDirection: 'column' }}>
+          <ErrorMessage>{intl.get('REGISTRATION_ERROR')}</ErrorMessage>
+          <Button onClick={reset} sx={{ marginTop: '20px' }}>
+            {intl.get('TRY_AGAIN')}
           </Button>
         </LoaderWrapperDiv>
       )}
     </Wrapper>
-  );
+  )
 };
 
 export default Register;
