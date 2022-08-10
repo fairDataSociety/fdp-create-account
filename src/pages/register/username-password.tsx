@@ -50,13 +50,14 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
 
       setLoading(true);
       setUsernameError(null);
+      setPasswordError(null);
 
       const usernameAvailable = await fdpClient.account.ens.isUsernameAvailable(
         username
       );
 
       if (!usernameAvailable) {
-        return setUsernameError("USERNAME_NOT_AVAILABLE");
+        return setUsernameError(intl.get("USERNAME_NOT_AVAILABLE"));
       }
 
       onSubmit({
@@ -65,10 +66,16 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         privateKey: "",
       });
     } catch (error) {
-      if ((error as Error).message?.includes("Username is not valid.")) {
-        setUsernameError("INVALID_USERNAME");
+      const { message } = error as Error;
+
+      if (message) {
+        if (message.includes("Username is not valid.")) {
+          setUsernameError(intl.get("INVALID_USERNAME"));
+        } else {
+          setUsernameError(message);
+        }
       } else {
-        setUsernameError("CANNOT_CHECK_USERNAME");
+        setUsernameError(intl.get("CANNOT_CHECK_USERNAME"));
       }
       console.error(error);
     } finally {
@@ -82,7 +89,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
     }
 
     if (usernameError) {
-      return intl.get(usernameError as string);
+      return usernameError;
     }
   };
 
