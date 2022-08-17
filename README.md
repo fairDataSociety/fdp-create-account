@@ -10,6 +10,7 @@ To configure the application, create an `.env` file in the root directory. Set t
 - **REACT_APP_BEE_DEBUG_URL** - Address of bee debug API
 - **REACT_APP_RPC_URL** - Address of RPC provider
 - **REACT_APP_FAIROS_URL** - FairOS URL (used only for migration)
+- **REACT_APP_BLOCKCHAIN_INFO** - Name of the blockchain network displayed to users (optional)
 - **REACT_APP_ENS_REGISTRY_ADDRESS** - ENS Registry contract address
 - **REACT_APP_SUBDOMAIN_REGISTRAR_ADDRESS** - Subdomain registrar contract address
 - **REACT_APP_PUBLIC_RESOLVER_ADDRESS** - Public Resolver contract address
@@ -55,15 +56,15 @@ npm run test:puppeteer
 ```
 
 To buy postage stamp for fdp-play
+
 ```bash
  curl -s -XPOST http://localhost:1635/stamps/10000000/18
 ```
 
-you will get respons like: ```{"batchID":"ea088d3f65f0f3ac2c3c6684b5e40e80e6ea0234e59b64aa156a9bfb7064a66c"}``` 
+you will get respons like: `{"batchID":"ea088d3f65f0f3ac2c3c6684b5e40e80e6ea0234e59b64aa156a9bfb7064a66c"}`
 
 To fund account from fdp-play
+
 ```bash
  node ./scripts/fund-new-account.js <account_address> <amount>
 ```
-
-

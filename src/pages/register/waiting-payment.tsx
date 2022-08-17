@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { styled } from "@mui/system";
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { Account } from "../../model/general.types";
 import ClipboardButton from "../../components/clipboard-button/clipboard-button.component";
 import { getAccountBalance } from "../../services/account.service";
 
 export interface WaitingPaymentProps {
   account: Account;
-  onPaymentDetected: () => void;
-  onError: () => void;
+  onPaymentDetected: (balance: string) => void;
+  onError: (error: unknown) => void;
 }
 
 const ContainerDiv = styled("div")({
@@ -16,6 +16,8 @@ const ContainerDiv = styled("div")({
   flexDirection: "column",
   margin: "20px auto 0 auto",
 });
+
+const networkInfo = process.env.REACT_APP_BLOCKCHAIN_INFO;
 
 const WaitingPayment = ({
   account,
@@ -30,12 +32,12 @@ const WaitingPayment = ({
 
       if (balance.gt(0)) {
         closeTimer();
-        onPaymentDetected();
+        onPaymentDetected(balance.toString());
       }
     } catch (error) {
       console.error(error);
       closeTimer();
-      onError();
+      onError(error);
     }
   };
 
@@ -54,10 +56,16 @@ const WaitingPayment = ({
 
   return (
     <ContainerDiv>
+      {networkInfo && (
+        <Typography variant="h6" sx={{ margin: "auto" }}>
+          {networkInfo}
+        </Typography>
+      )}
       <Typography variant="h5" sx={{ margin: "auto" }}>
         <span data-testid="account">{account}</span>
         <ClipboardButton text={account} />
       </Typography>
+      <CircularProgress sx={{ margin: "auto", marginTop: "30px" }} />
     </ContainerDiv>
   );
 };
