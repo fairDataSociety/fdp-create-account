@@ -10,7 +10,7 @@ To configure the application, create an `.env` file in the root directory. Set t
 - **REACT_APP_BEE_DEBUG_URL** - Address of bee debug API
 - **REACT_APP_RPC_URL** - Address of RPC provider
 - **REACT_APP_FAIROS_URL** - FairOS URL (used only for migration)
-- **REACT_APP_BLOCKCHAIN_INFO** - Name of the blockchain network displayed to users (optional)
+- **REACT_APP_BLOCKCHAIN_INFO** - Name of the blockchain network displayed to users (optional) ie. goerli, 
 - **REACT_APP_ENS_REGISTRY_ADDRESS** - ENS Registry contract address
 - **REACT_APP_SUBDOMAIN_REGISTRAR_ADDRESS** - Subdomain registrar contract address
 - **REACT_APP_PUBLIC_RESOLVER_ADDRESS** - Public Resolver contract address
