@@ -5,6 +5,7 @@ import { Button, TextField } from "@mui/material";
 import Form from "../../components/form/form.component";
 import { RegisterData } from "../../model/internal-messages.model";
 import { useFdpStorage } from "../../context/fdp.context";
+import { isPasswordValid } from "../../utils/ens.utils";
 
 export interface UsernamePasswordProps {
   onSubmit: (data: RegisterData) => void;
@@ -22,21 +23,18 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormFields>();
+  const { fdpClient } = useFdpStorage();
   const [loading, setLoading] = useState<boolean>(false);
-  const [usernameTaken, setUsernameTaken] = useState<boolean>(false);
-  const [networkError, setNetworkError] = useState<boolean>(false);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const validatePassword = (password: string): string | null => {
-    if (!password || password.length < 8) {
+    if (!isPasswordValid(password)) {
       return intl.get("PASSWORD_TOO_SHORT");
     }
 
     return null;
-
-    // TODO check if password contains lowercase and uppercase letters
   };
-  const { fdpClient } = useFdpStorage();
 
   const onSubmitInternal = async ({
     username,
@@ -51,12 +49,15 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
       }
 
       setLoading(true);
-      setNetworkError(false);
+      setUsernameError(null);
+      setPasswordError(null);
 
-      const usernameAvailable = await fdpClient.account.ens.isUsernameAvailable(username);
+      const usernameAvailable = await fdpClient.account.ens.isUsernameAvailable(
+        username
+      );
 
       if (!usernameAvailable) {
-        return setUsernameTaken(true);
+        return setUsernameError(intl.get("USERNAME_NOT_AVAILABLE"));
       }
 
       onSubmit({
@@ -65,7 +66,17 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         privateKey: "",
       });
     } catch (error) {
-      setNetworkError(true);
+      const { message } = error as Error;
+
+      if (message) {
+        if (message.includes("Username is not valid.")) {
+          setUsernameError(intl.get("INVALID_USERNAME"));
+        } else {
+          setUsernameError(message);
+        }
+      } else {
+        setUsernameError(intl.get("CANNOT_CHECK_USERNAME"));
+      }
       console.error(error);
     } finally {
       setLoading(false);
@@ -77,12 +88,8 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
       return intl.get("USERNAME_REQUIRED_ERROR");
     }
 
-    if (usernameTaken) {
-      return intl.get("USERNAME_NOT_AVAILABLE");
-    }
-
-    if (networkError) {
-      return intl.get("CANNOT_CHECK_USERNAME");
+    if (usernameError) {
+      return usernameError;
     }
   };
 
@@ -93,9 +100,9 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         variant="outlined"
         fullWidth
         {...register("username", { required: true })}
-        onChange={() => setUsernameTaken(false)}
+        onChange={() => setUsernameError(null)}
         disabled={loading}
-        error={Boolean(errors.username || usernameTaken || networkError)}
+        error={Boolean(errors.username || usernameError)}
         helperText={getUsernameError()}
         data-testid="username"
       />

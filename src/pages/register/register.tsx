@@ -3,7 +3,6 @@ import { styled } from "@mui/system";
 import intl from "react-intl-universal";
 import Title from "../../components/title/title.component";
 import { Button, CircularProgress, Typography } from "@mui/material";
-import DoneAll from "@mui/icons-material/DoneAll";
 import { Wallet } from "ethers";
 import UsernamePassword from "./username-password";
 import MnemonicConfirmation from "./mnemonic-confirmation";
@@ -12,11 +11,13 @@ import { RegisterData } from "../../model/internal-messages.model";
 import WaitingPayment from "./waiting-payment";
 import { Account, Mnemonic } from "../../model/general.types";
 import MnemonicComponent from "./mnemonic";
-import { FlexColumnDiv } from "../../components/utils/utils";
 import Wrapper from "../../components/wrapper/wrapper.component";
 import RegisterMethods from "./register-methods";
 import EnterMnemonic from "./enter-mnemonic";
 import { useFdpStorage } from "../../context/fdp.context";
+import RouteCodes from "../../routes/route-codes";
+import Link from "../../components/link/link";
+import RegistrationComplete from "./registration-complete";
 
 enum Steps {
   UsernamePassword,
@@ -39,6 +40,7 @@ const LoaderWrapperDiv = styled("div")({
 interface RegistrationState extends RegisterData {
   account: Account;
   mnemonic: Mnemonic;
+  balance: string | null;
 }
 
 const emptyState: RegistrationState = {
@@ -47,6 +49,7 @@ const emptyState: RegistrationState = {
   privateKey: "",
   account: "",
   mnemonic: "",
+  balance: null,
 };
 
 const Register = () => {
@@ -54,6 +57,7 @@ const Register = () => {
 
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
   const [data, setData] = useState<RegistrationState>(emptyState);
+  const [error, setError] = useState<string | null>(null);
 
   const onUsernamePasswordSubmit = (registerData: RegisterData) => {
     setData({
@@ -106,12 +110,17 @@ const Register = () => {
     });
   };
 
-  const onPaymentConfirmed = () => {
+  const onPaymentConfirmed = (balance: string) => {
     setStep(Steps.Loading);
+    setData({
+      ...data,
+      balance,
+    });
     registerUser();
   };
 
-  const onError = () => {
+  const onError = (error: unknown) => {
+    setError((error as Error)?.message);
     setStep(Steps.Error);
   };
 
@@ -138,6 +147,7 @@ const Register = () => {
       setStep(Steps.Complete);
     } catch (error) {
       console.error(error);
+      setError((error as Error)?.message);
       setStep(Steps.Error);
     }
   };
@@ -166,7 +176,12 @@ const Register = () => {
 
   const reset = () => {
     setData(emptyState);
-    setStep(Steps.UsernamePassword);
+    setError(null);
+    if (data.balance) {
+      onPaymentConfirmed(data.balance);
+    } else {
+      setStep(Steps.WaitingPayment);
+    }
   };
 
   useEffect(() => {
@@ -195,7 +210,10 @@ const Register = () => {
         {getStepInstructionMessage(step)}
       </Typography>
       {step === Steps.UsernamePassword && (
-        <UsernamePassword onSubmit={onUsernamePasswordSubmit} />
+        <>
+          <UsernamePassword onSubmit={onUsernamePasswordSubmit} />
+          <Link to={RouteCodes.migrate}>{intl.get("MIGRATION_LINK")}</Link>
+        </>
       )}
       {step === Steps.ChooseMethod && (
         <RegisterMethods
@@ -223,9 +241,11 @@ const Register = () => {
         />
       )}
       {step === Steps.Complete && (
-        <FlexColumnDiv>
-          <DoneAll sx={{ margin: "auto" }} data-testid="complete" />
-        </FlexColumnDiv>
+        <RegistrationComplete
+          username={data.username}
+          account={data.account}
+          balance={data.balance as string}
+        />
       )}
       {step === Steps.Loading && (
         <LoaderWrapperDiv>
@@ -234,7 +254,9 @@ const Register = () => {
       )}
       {step === Steps.Error && (
         <LoaderWrapperDiv sx={{ flexDirection: "column" }}>
-          <ErrorMessage>{intl.get("REGISTRATION_ERROR")}</ErrorMessage>
+          <ErrorMessage>
+            {intl.get("REGISTRATION_ERROR") + (error || "")}
+          </ErrorMessage>
           <Button onClick={reset} sx={{ marginTop: "20px" }}>
             {intl.get("TRY_AGAIN")}
           </Button>

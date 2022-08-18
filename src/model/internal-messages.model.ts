@@ -18,3 +18,9 @@ export interface RegisterResponse {
   mnemonic: Mnemonic;
   privateKey: PrivateKey;
 }
+
+export interface MigrateData {
+  oldUsername: string;
+  newUsername: string;
+  password: string;
+}
