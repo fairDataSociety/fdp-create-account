@@ -46,7 +46,6 @@ interface RegistrationState extends RegisterData {
 const emptyState: RegistrationState = {
   username: "",
   password: "",
-  privateKey: "",
   account: "",
   mnemonic: "",
   balance: null,
@@ -81,7 +80,6 @@ const Register = () => {
       const wallet = await fdpClient.account.createWallet();
       const response = {
         account: wallet.address,
-        privateKey: wallet.privateKey,
         mnemonic: wallet.mnemonic.phrase,
       };
       setData({
@@ -126,21 +124,13 @@ const Register = () => {
 
   const registerUser = async () => {
     try {
-      const { username, password, privateKey, mnemonic } = data;
+      const { username, password, mnemonic } = data;
 
-      let wallet;
-
-      if (privateKey) {
-        wallet = new Wallet(privateKey);
-      } else if (mnemonic) {
-        wallet = Wallet.fromMnemonic(mnemonic);
-      } else {
-        throw new Error(
-          "Private key or mnemonic must be set in order to register account"
-        );
+      if (!mnemonic) {
+        throw new Error("Mnemonic must be set in order to register account");
       }
 
-      fdpClient.account.setActiveAccount(wallet);
+      fdpClient.account.setAccountFromMnemonic(mnemonic);
 
       await fdpClient.account.register(username, password);
 
@@ -177,7 +167,9 @@ const Register = () => {
   const reset = () => {
     setData(emptyState);
     setError(null);
-    if (data.balance) {
+    if (!data.account) {
+      registerUser();
+    } else if (data.balance) {
       onPaymentConfirmed(data.balance);
     } else {
       setStep(Steps.WaitingPayment);
