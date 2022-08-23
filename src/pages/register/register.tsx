@@ -3,7 +3,6 @@ import { styled } from "@mui/system";
 import intl from "react-intl-universal";
 import Title from "../../components/title/title.component";
 import { Button, CircularProgress, Typography } from "@mui/material";
-import { Wallet } from "ethers";
 import UsernamePassword from "./username-password";
 import MnemonicConfirmation from "./mnemonic-confirmation";
 import ErrorMessage from "../../components/error-message/error-message.component";

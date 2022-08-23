@@ -1,25 +1,53 @@
-// TODO fdp-storage doesn't export types from fdp-contracts
-export function getEnsConfig(): any {
-  const ensRegistry = process.env.REACT_APP_ENS_REGISTRY_ADDRESS;
-  const publicResolver = process.env.REACT_APP_PUBLIC_RESOLVER_ADDRESS;
-  const fdsRegistrar = process.env.REACT_APP_SUBDOMAIN_REGISTRAR_ADDRESS;
+import { FdpContracts } from "@fairdatasociety/fdp-storage";
+const { Environments, getEnvironmentConfig } = FdpContracts;
 
-  if (ensRegistry && publicResolver && fdsRegistrar) {
-    return {
-      ensOptions: {
-        performChecks: true,
-        rpcUrl: process.env.REACT_APP_RPC_URL,
-        contractAddresses: {
-          ensRegistry,
-          publicResolver,
-          fdsRegistrar,
-        },
-      },
-      ensDomain: "fds",
-    };
+function getEnvironment() {
+  const environment = process.env.REACT_APP_ENVIRONMENT;
+
+  if (environment === "LOCALHOST") {
+    return getEnvironmentConfig(Environments.LOCALHOST);
+  } else if (environment === "GOERLI") {
+    return getEnvironmentConfig(Environments.GOERLI);
   }
 
   return undefined;
+}
+
+export function getEnsConfig(): any {
+  let ensConfig: any = getEnvironment();
+  const ensRegistry = process.env.REACT_APP_ENS_REGISTRY_ADDRESS;
+  const publicResolver = process.env.REACT_APP_PUBLIC_RESOLVER_ADDRESS;
+  const fdsRegistrar = process.env.REACT_APP_SUBDOMAIN_REGISTRAR_ADDRESS;
+  const rpcUrl = process.env.REACT_APP_RPC_URL;
+  const ensDomain = "fds";
+
+  if (!rpcUrl && !ensRegistry && !publicResolver && !fdsRegistrar) {
+    return ensConfig
+      ? {
+          ensConfig,
+          ensDomain,
+        }
+      : undefined;
+  }
+
+  ensConfig = ensConfig || {};
+
+  if (rpcUrl) {
+    ensConfig.rpcUrl = rpcUrl;
+  }
+
+  if (ensRegistry && publicResolver && fdsRegistrar) {
+    ensConfig.contractAddresses = {
+      ensRegistry,
+      publicResolver,
+      fdsRegistrar,
+    };
+  }
+
+  return {
+    ensConfig,
+    ensDomain,
+  };
 }
 
 export function isPasswordValid(password: string): boolean {
