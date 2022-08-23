@@ -1,5 +1,6 @@
 import { FdpContracts } from "@fairdatasociety/fdp-storage";
-const { Environments, getEnvironmentConfig } = FdpContracts;
+// TODO temporary because the fdp-storage is not exporting these values
+const { Environments, getEnvironmentConfig } = FdpContracts || {};
 
 function getEnvironment() {
   const environment = process.env.REACT_APP_ENVIRONMENT;
