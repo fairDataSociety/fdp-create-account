@@ -46,7 +46,10 @@ export function getEnsConfig(): any {
   }
 
   return {
-    ensConfig,
+    ensOptions: {
+      performChecks: true,
+      ...ensConfig,
+    },
     ensDomain,
   };
 }
