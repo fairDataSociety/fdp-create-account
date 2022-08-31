@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import intl from "react-intl-universal";
+import axios from "axios";
 import Title from "../../components/title/title.component";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import UsernamePassword from "./username-password";
@@ -129,9 +130,21 @@ const Register = () => {
         throw new Error("Mnemonic must be set in order to register account");
       }
 
-      fdpClient.account.setAccountFromMnemonic(mnemonic);
+      await axios.post(
+        `${process.env.REACT_APP_FAIROS_URL}/v2/user/signup`,
+        {
+          user_name: username,
+          password,
+          mnemonic,
+        },
+        { withCredentials: true }
+      );
 
-      await fdpClient.account.register(username, password);
+      // TODO Temporary commented out
+
+      // fdpClient.account.setAccountFromMnemonic(mnemonic);
+
+      // await fdpClient.account.register(username, password);
 
       setStep(Steps.Complete);
     } catch (error) {
