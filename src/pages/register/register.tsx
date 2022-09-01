@@ -191,6 +191,19 @@ const Register = () => {
 
   return (
     <Wrapper>
+      {process.env.REACT_APP_ENVIRONMENT === "GOERLI" && (
+        <Typography
+          variant="body1"
+          align="center"
+          sx={{
+            marginBottom: "20px",
+            color: "#f19200",
+          }}
+        >
+          {intl.get("GOERLI_INFO")}
+        </Typography>
+      )}
+
       <Title>{intl.get("REGISTER_TITLE")}</Title>
       <Typography
         variant="body1"
