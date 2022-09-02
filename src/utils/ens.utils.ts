@@ -15,7 +15,7 @@ function getEnvironment() {
 }
 
 export function getEnsConfig(): any {
-  let ensConfig: any = getEnvironment();
+  let ensOptions: any = getEnvironment();
   const ensRegistry = process.env.REACT_APP_ENS_REGISTRY_ADDRESS;
   const publicResolver = process.env.REACT_APP_PUBLIC_RESOLVER_ADDRESS;
   const fdsRegistrar = process.env.REACT_APP_SUBDOMAIN_REGISTRAR_ADDRESS;
@@ -23,22 +23,22 @@ export function getEnsConfig(): any {
   const ensDomain = "fds";
 
   if (!rpcUrl && !ensRegistry && !publicResolver && !fdsRegistrar) {
-    return ensConfig
+    return ensOptions
       ? {
-          ensConfig,
+          ensOptions,
           ensDomain,
         }
       : undefined;
   }
 
-  ensConfig = ensConfig || {};
+  ensOptions = ensOptions || {};
 
   if (rpcUrl) {
-    ensConfig.rpcUrl = rpcUrl;
+    ensOptions.rpcUrl = rpcUrl;
   }
 
   if (ensRegistry && publicResolver && fdsRegistrar) {
-    ensConfig.contractAddresses = {
+    ensOptions.contractAddresses = {
       ensRegistry,
       publicResolver,
       fdsRegistrar,
@@ -48,7 +48,7 @@ export function getEnsConfig(): any {
   return {
     ensOptions: {
       performChecks: true,
-      ...ensConfig,
+      ...ensOptions,
     },
     ensDomain,
   };
