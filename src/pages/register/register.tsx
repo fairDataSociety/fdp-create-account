@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 import intl from "react-intl-universal";
-import axios from "axios";
 import Title from "../../components/title/title.component";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import UsernamePassword from "./username-password";
