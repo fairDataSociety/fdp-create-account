@@ -130,21 +130,9 @@ const Register = () => {
         throw new Error("Mnemonic must be set in order to register account");
       }
 
-      await axios.post(
-        `${process.env.REACT_APP_FAIROS_URL}/v2/user/signup`,
-        {
-          user_name: username,
-          password,
-          mnemonic,
-        },
-        { withCredentials: true }
-      );
+      fdpClient.account.setAccountFromMnemonic(mnemonic);
 
-      // TODO Temporary commented out
-
-      // fdpClient.account.setAccountFromMnemonic(mnemonic);
-
-      // await fdpClient.account.register(username, password);
+      await fdpClient.account.register(username, password);
 
       setStep(Steps.Complete);
     } catch (error) {
@@ -203,6 +191,19 @@ const Register = () => {
 
   return (
     <Wrapper>
+      {process.env.REACT_APP_ENVIRONMENT === "GOERLI" && (
+        <Typography
+          variant="body1"
+          align="center"
+          sx={{
+            marginBottom: "20px",
+            color: "#f19200",
+          }}
+        >
+          {intl.get("GOERLI_INFO")}
+        </Typography>
+      )}
+
       <Title>{intl.get("REGISTER_TITLE")}</Title>
       <Typography
         variant="body1"
