@@ -23,6 +23,12 @@ If the latest `fdp-contract` image is used as RPC provider, then contract addres
 - **ENSRegistry** deployed to: 0xd55cc6b1070c4106bbAB2DC7a4C23A20CD3528a0
 - **PublicResolver** deployed to: 0x920A3959c37036B59AA21cD8f259e91830CA8BF8
 
+# FairOS Testnet uses these Deployment addresses
+- FDS Registry:   0xF4C9Cd25031E3BB8c5618299bf35b349c1aAb6A9
+- ENS Registry:   0x42B22483e3c8dF794f351939620572d1a3193c12
+- PublicResolver: 0xbfeCC6c32B224F7D0026ac86506Fe40A9607BD14
+
+
 > **_NOTE_:** Check the `.default.env` file for more information
 
 ## Build
