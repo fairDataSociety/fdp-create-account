@@ -7,6 +7,7 @@ import { LocalesContextProvider } from "./context/locales.context";
 import Routes from "./routes/routes";
 import CenteredWrapper from "./components/centered-wrapper/centered-wrapper.component";
 import { FdpStorageProvider } from "./context/fdp.context";
+import Footer from "./components/footer/footer";
 
 const App = () => {
   useEffect(() => {
@@ -23,6 +24,7 @@ const App = () => {
               <CenteredWrapper>
                 <Routes />
               </CenteredWrapper>
+              <Footer />
             </LocalesContextProvider>
           </FdpStorageProvider>
         </React.StrictMode>
