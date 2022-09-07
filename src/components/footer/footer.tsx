@@ -67,7 +67,7 @@ const Footer = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Column>
               <Typography variant="h6">COMMUNITY</Typography>
-              <Link href="http://portal.fairdatasociety.org/">Ecosystem</Link>
+              <Link href="https://fairdataprotocol.bzz.link/">Ecosystem</Link>
               <Link href="https://twitter.com/fairdatasociety">Twitter</Link>
               <Link href="https://discord.com/channels/888359049551310869/940628803250704394">
                 Discord
@@ -83,9 +83,7 @@ const Footer = () => {
               <Link href="https://github.com/fairDataSociety/fdp-create-account">
                 Github
               </Link>
-              <Link href="https://github.com/fairDataSociety/fdp-create-account">
-                Blog
-              </Link>
+              <Link href="https://fairdatasociety.bzz.link/">Blog</Link>
             </Column>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
