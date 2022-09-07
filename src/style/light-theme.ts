@@ -11,6 +11,9 @@ const lightTheme = createTheme({
     linkHover: {
       main: "#555",
     },
+    footer: {
+      main: "#1976d205",
+    },
   },
 });
 
