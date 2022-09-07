@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import intl from "react-intl-universal";
 import { styled } from "@mui/system";
 import axios from "axios";
-import { Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Typography,
+  Link as MuiLink,
+} from "@mui/material";
 import DoneAll from "@mui/icons-material/DoneAll";
 import MigrateForm from "./migrate-form";
 import Wrapper from "../../components/wrapper/wrapper.component";
@@ -85,16 +90,28 @@ const Migrate = () => {
     }
   };
 
-  const getStepInstructionMessage = (step: Steps): string => {
-    let message: string | null = null;
+  const getStepInstructionMessage = (step: Steps): JSX.Element | string => {
+    let message: JSX.Element | string | null = null;
 
     if (step === Steps.UsernamePassword) {
-      message = "MIGRATE_ACCOUNT_INSTRUCTIONS";
+      message = (
+        <>
+          {intl.get("MIGRATE_ACCOUNT_INSTRUCTIONS")}
+          <MuiLink
+            href="https://github.com/fairDataSociety/fairOS-dfs/releases"
+            target="_blank"
+            underline="hover"
+            color="primary"
+          >
+            {intl.get("MIGRATE_ACCOUNT_INSTRUCTIONS_LINK")}
+          </MuiLink>
+        </>
+      );
     } else if (step === Steps.Complete) {
-      message = "MIGRATION_COMPLETE";
+      message = intl.get("MIGRATION_COMPLETE");
     }
 
-    return message ? intl.get(message) : "";
+    return message || "";
   };
 
   const reset = () => {
