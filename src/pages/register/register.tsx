@@ -156,6 +156,13 @@ const Register = () => {
       message = "EXISTING_ACCOUNT_INSTRUCTIONS";
     } else if (step === Steps.WaitingPayment) {
       message = "WAITING_FOR_PAYMENT_INSTRUCTIONS";
+      if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
+        return (
+          intl.get(message) +
+          " " +
+          intl.get("WAITING_FOR_PAYMENT_AMOUNT_GOERLI")
+        );
+      }
     } else if (step === Steps.Complete) {
       message = "REGISTRATION_COMPLETE";
     }

@@ -5,7 +5,7 @@ import { GLOBAL_POSTAGE_BATCH_ID } from "../constants/constants";
 
 const fdpClient = new FdpStorage(
   process.env.REACT_APP_BEE_URL as string,
-  GLOBAL_POSTAGE_BATCH_ID as any,
+  (process.env.REACT_APP_BATCH_ID || GLOBAL_POSTAGE_BATCH_ID) as any,
   getEnsConfig()
 );
 
