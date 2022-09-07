@@ -12,7 +12,7 @@ const lightTheme = createTheme({
       main: "#555",
     },
     footer: {
-      main: "#1976d217",
+      main: "#1976d205",
     },
   },
 });

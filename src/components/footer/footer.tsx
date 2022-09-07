@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "@mui/system";
 import { Grid, Link as MuiLink, Typography } from "@mui/material";
-import fdsLogo from "../../assets/images/FDS_logo_transparent.png";
+import fdsLogo from "../../assets/images/fds_logo.jpg";
 import swarmLogo from "../../assets/images/swarm-logo-2.svg";
 
 const Wrapper = styled("div")(({ theme }) => ({
