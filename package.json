@@ -22,7 +22,7 @@
     "react-intl-universal": "^2.6.6",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
-    "typescript": "^4.7.4",
+    "typescript": "^4.8.3",
     "web-vitals": "^3.0.1"
   },
   "scripts": {
