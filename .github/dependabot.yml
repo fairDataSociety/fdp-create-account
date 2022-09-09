@@ -16,6 +16,7 @@ updates:
       - "tfius"
       - "molekilla"
 
+
   # Enable version updates for Docker
   - package-ecosystem: "docker"
     # Look for a `Dockerfile` in the `root` directory
@@ -26,3 +27,4 @@ updates:
       interval: "weekly"
     reviewers:
       - "darkobas2"
+
