@@ -1,9 +1,10 @@
 version = 1
+
 test_patterns = ["*/test/**"]
 
 exclude_patterns = [
-    "public/**,",
-    "dist/**"
+  "public/**,",
+  "dist/**"
 ]
 
 [[analyzers]]
@@ -12,6 +13,7 @@ enabled = true
 
   [analyzers.meta]
   plugins = ["react"]
-  module_system = "es-modules"
-  dialect = "flow"
-  skip_doc_coverage = ["class-expression", "method-definition"]
+
+[[transformers]]
+name = "standardjs"
+enabled = true
