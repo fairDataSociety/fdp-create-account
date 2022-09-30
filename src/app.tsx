@@ -11,8 +11,8 @@ import Footer from "./components/footer/footer";
 
 const App = () => {
   useEffect(() => {
-    document.title = "Fair Data Society";
-  }, []);
+    document.title = 'Fair Data Society'
+  }, [])
 
   return (
     <HashRouter>
@@ -30,7 +30,7 @@ const App = () => {
         </React.StrictMode>
       </ThemeProvider>
     </HashRouter>
-  );
-};
+  )
+}
 
 export default App;

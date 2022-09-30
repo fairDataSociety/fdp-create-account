@@ -51,14 +51,14 @@ const Footer = () => {
             <Column>
               <Typography variant="h6">ABOUT</Typography>
               <Link href="https://fairdatasociety.org/">
-                <Logo src={fdsLogo} sx={{ width: "50px" }} />
+                <Logo src={fdsLogo} sx={{ width: '50px' }} />
               </Link>
               <Link href="https://www.ethswarm.org/">
                 <Logo src={swarmLogo} />
               </Link>
               <Link href="https://github.com/fairDataSociety/fdp-create-account">
                 <>
-                  {process.env.REACT_APP_VERSION}{" "}
+                  {process.env.REACT_APP_VERSION}{' '}
                   {process.env.REACT_APP_BLOCKCHAIN_INFO}
                 </>
               </Link>
@@ -77,9 +77,7 @@ const Footer = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Column>
               <Typography variant="h6">RESOURCES</Typography>
-              <Link href="https://github.com/fairDataSociety/fdp-create-account">
-                Documentation
-              </Link>
+              <Link href="https://fairdataprotocol.bzz.link/">Documentation</Link>
               <Link href="https://github.com/fairDataSociety/fdp-create-account">
                 Github
               </Link>
@@ -100,7 +98,7 @@ const Footer = () => {
         </Grid>
       </InnerWrapper>
     </Wrapper>
-  );
+  )
 };
 
 export default Footer;
