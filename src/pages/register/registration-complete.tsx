@@ -11,6 +11,7 @@ import {
   ListItem as MuiListItem,
   ListItemAvatar,
   ListItemText,
+  Typography,
 } from "@mui/material";
 
 export interface RegistrationCompleteProps {
@@ -65,6 +66,19 @@ const RegistrationComplete = ({
           />
         )}
       </List>
+      <Typography
+        variant="body1"
+        align="center"
+        sx={{
+          marginTop: "20px",
+        }}
+      >
+        {intl.get("HOW_TO_USE_ACCOUNT_1")}
+        <a href={process.env.REACT_APP_FAIRDRIVE_URL} target="_blank">
+          Fairdrive
+        </a>
+        {intl.get("HOW_TO_USE_ACCOUNT_2")}
+      </Typography>
     </FlexColumnDiv>
   );
 };

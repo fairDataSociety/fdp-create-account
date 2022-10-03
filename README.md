@@ -9,6 +9,7 @@ To configure the application, create an `.env` file in the root directory. Set t
 - **REACT_APP_BEE_URL** - Address of a bee node
 - **REACT_APP_BEE_DEBUG_URL** - Address of bee debug API
 - **REACT_APP_FAIROS_URL** - FairOS URL (used only for migration)
+- **REACT_APP_FAIRDRIVE_URL** - Fairdrive URL
 - **REACT_APP_BLOCKCHAIN_INFO** - Name of the blockchain network displayed to users (optional) ie. goerli,
 - **REACT_APP_ENVIRONMENT** - ENS environment: LOCALHOST or GOERLI. If the environment is specified the following variables are not required.
 - **REACT_APP_RPC_URL** - Address of RPC provider

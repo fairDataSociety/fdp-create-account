@@ -48,5 +48,7 @@
   "MIGRATION_ERROR_NO_FUNDS": "There is no sufficient funds for migration. You should fund your address:",
   "MIGRATION_ERROR": "Migration failed with the error: ",
   "DISCLAIMER": "Disclaimer: Account integrity persistence and security are not assured. Expect that funds used for account might be lost, as well as any data the account uses.",
-  "GOERLI_INFO": "Running on Goerli testnet - you are creating an account on the testnet."
+  "GOERLI_INFO": "Running on Goerli testnet - you are creating an account on the testnet.",
+  "HOW_TO_USE_ACCOUNT_1": "You can use your account to login into ",
+  "HOW_TO_USE_ACCOUNT_2": " and other dApps!"
 }
