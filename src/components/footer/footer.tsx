@@ -95,6 +95,10 @@ const Footer = () => {
               <Link href="https://chrome.google.com/webstore/detail/ethereum-swarm-extension/afpgelfcknfbbfnipnomfdbbnbbemnia">
                 Swarm
               </Link>
+              <Typography variant="h6">LIBRARY</Typography>
+              <Link href="https://github.com/fairDataSociety/blossom/tree/master/library">
+                Blossom library github
+              </Link>
             </Column>
           </Grid>
         </Grid>
