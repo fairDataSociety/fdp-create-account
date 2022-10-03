@@ -5,6 +5,8 @@ const Form = styled("form")({
   flexDirection: "column",
   maxWidth: "500px",
   marginTop: "30px",
+  width: "100%",
+  margin: "auto",
   "& > .MuiFormControl-root": {
     margin: "20px 0",
   },
