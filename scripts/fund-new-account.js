@@ -16,8 +16,7 @@ const wallet = new Wallet(privateKey, provider)
 wallet
   .sendTransaction({
     to: toAccount,
-    value: utils.parseEther(amount),
+    value: utils.parseEther(amount)
   })
   .then(() => console.log('Successfully transfered funds'))
   .catch(console.error)
-  
