@@ -54,7 +54,7 @@ const RegistrationComplete = ({
           <ListItem
             avatar={<AccountBalanceWallet />}
             primary={account}
-            secondary={intl.get("ACCOUNT")}
+            secondary={intl.get("ADDRESS")}
           />
         )}
         {balance && (
