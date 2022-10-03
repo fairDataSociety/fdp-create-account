@@ -47,7 +47,7 @@ const Footer = () => {
     <Wrapper>
       <InnerWrapper>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} md={12 / 5} alignContent="center">
+          <Grid item xs={12} sm={6} md={3} alignContent="center">
             <Column>
               <Typography variant="h6">ABOUT</Typography>
               <Link href="https://fairdatasociety.org/">
@@ -64,7 +64,7 @@ const Footer = () => {
               </Link>
             </Column>
           </Grid>
-          <Grid item xs={12} sm={6} md={12 / 5}>
+          <Grid item xs={12} sm={6} md={3}>
             <Column>
               <Typography variant="h6">COMMUNITY</Typography>
               <Link href="https://fairdataprotocol.bzz.link/">Ecosystem</Link>
@@ -74,7 +74,7 @@ const Footer = () => {
               </Link>
             </Column>
           </Grid>
-          <Grid item xs={12} sm={6} md={12 / 5}>
+          <Grid item xs={12} sm={6} md={3}>
             <Column>
               <Typography variant="h6">RESOURCES</Typography>
               <Link href="https://github.com/fairDataSociety/fdp-create-account">
@@ -86,7 +86,7 @@ const Footer = () => {
               <Link href="https://fairdatasociety.bzz.link/">Blog</Link>
             </Column>
           </Grid>
-          <Grid item xs={12} sm={6} md={12 / 5}>
+          <Grid item xs={12} sm={6} md={3}>
             <Column>
               <Typography variant="h6">EXTENSIONS</Typography>
               <Link href="https://chrome.google.com/webstore/detail/blossom/caedjloenbhibmaeffockkiallpngmmd">
@@ -95,10 +95,6 @@ const Footer = () => {
               <Link href="https://chrome.google.com/webstore/detail/ethereum-swarm-extension/afpgelfcknfbbfnipnomfdbbnbbemnia">
                 Swarm
               </Link>
-            </Column>
-          </Grid>
-          <Grid item xs={12} sm={6} md={12 / 5}>
-            <Column>
               <Typography variant="h6">LIBRARY</Typography>
               <Link href="https://github.com/fairDataSociety/blossom/tree/master/library">
                 Blossom library github
