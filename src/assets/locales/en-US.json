@@ -36,7 +36,7 @@
   "USERNAME_NOT_AVAILABLE": "Username is not available",
   "CANNOT_CHECK_USERNAME": "Cannot check username. Network currently unavailable",
   "CONFIRM": "Confirm",
-  "MIGRATION_LINK": "Already have an old account? You can migrate it to the new protocol here.",
+  "MIGRATION_LINK": "Do you have an existing account and want to migrate data? Use Migration page.",
   "REGISTRATION_LINK": "Register completely new account.",
   "OLD_USERNAME_LABEL": "Old Username",
   "NEW_USERNAME_LABEL": "New Username",
