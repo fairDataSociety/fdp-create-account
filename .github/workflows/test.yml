@@ -36,7 +36,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install npm deps
-        if: steps.npm-cache.outputs.cache-hit != 'true'
+        # if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci --cache .npm
 
       - name: Run fdp-play
