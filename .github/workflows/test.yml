@@ -42,6 +42,9 @@ jobs:
       - name: Run fdp-play
         run: fdp-play start -d --bee-version $BEE_VERSION
 
+      - name: copy config
+        run: cp .test.env .env
+
       - name: buy stamps and npm start
         run: |
           curl -s -XPOST http://localhost:1635/stamps/10000000/18 | npm run start:batch --batch=$(cut -c 13-76) &
