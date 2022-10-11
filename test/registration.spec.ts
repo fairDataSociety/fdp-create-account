@@ -76,7 +76,7 @@ async function fillUsernamePasswordForm(
   await (await getElementByTestId(page, "submit")).click();
 }
 
-const username = "test_user";
+const username = "testuser";
 const password = "pass12345";
 let mnemonic: string[];
 
@@ -165,7 +165,7 @@ describe("Unsuccessful registration tests", () => {
 
 describe("Registration with an existing account", () => {
   let page: Page;
-  const username = "test_user_2";
+  const username = "testuser2";
 
   beforeAll(async () => {
     page = await openIndex();
