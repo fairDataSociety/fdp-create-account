@@ -48,6 +48,9 @@ jobs:
         env:
           CI: false
 
+      - name: wait for environment and batch
+        run: sleep 200
+
       - name: tests
         run: |
           export DISPLAY=:99
