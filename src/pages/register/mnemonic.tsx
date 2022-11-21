@@ -4,6 +4,7 @@ import intl from "react-intl-universal";
 import { Button, Chip, Typography } from "@mui/material";
 import { FlexColumnDiv, FlexDiv } from "../../components/utils/utils";
 import { Mnemonic } from "../../model/general.types";
+import ClipboardButton from "../../components/clipboard-button/clipboard-button.component";
 
 export interface MnemonicProps {
   phrase: Mnemonic;
@@ -35,6 +36,9 @@ const MnemonicComponent = ({ phrase, onConfirm }: MnemonicProps) => {
             </Typography>
           ))}
         </ContainerDiv>
+      </FlexDiv>
+      <FlexDiv sx={{ width: "50px", margin: "auto" }}>
+        <ClipboardButton text={phrase} />
       </FlexDiv>
       <Button
         onClick={onConfirm}

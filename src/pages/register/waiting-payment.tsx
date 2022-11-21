@@ -1,4 +1,6 @@
 import React, { useEffect, useRef } from "react";
+import { utils } from "ethers";
+import intl from "react-intl-universal";
 import { styled } from "@mui/system";
 import { CircularProgress, Typography } from "@mui/material";
 import { Account } from "../../model/general.types";
@@ -32,7 +34,7 @@ const WaitingPayment = ({
 
       if (balance.gt(0)) {
         closeTimer();
-        onPaymentDetected(balance.toString());
+        onPaymentDetected(`${utils.formatEther(balance)} ETH`);
       }
     } catch (error) {
       console.error(error);
@@ -66,6 +68,13 @@ const WaitingPayment = ({
         <ClipboardButton text={account} />
       </Typography>
       <CircularProgress sx={{ margin: "auto", marginTop: "30px" }} />
+      <Typography
+        variant="body1"
+        align="center"
+        sx={{ margin: "auto", marginTop: "30px" }}
+      >
+        {intl.get("DISCLAIMER")}
+      </Typography>
     </ContainerDiv>
   );
 };

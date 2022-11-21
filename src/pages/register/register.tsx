@@ -3,7 +3,6 @@ import { styled } from "@mui/system";
 import intl from "react-intl-universal";
 import Title from "../../components/title/title.component";
 import { Button, CircularProgress, Typography } from "@mui/material";
-import { Wallet } from "ethers";
 import UsernamePassword from "./username-password";
 import MnemonicConfirmation from "./mnemonic-confirmation";
 import ErrorMessage from "../../components/error-message/error-message.component";
@@ -46,7 +45,6 @@ interface RegistrationState extends RegisterData {
 const emptyState: RegistrationState = {
   username: "",
   password: "",
-  privateKey: "",
   account: "",
   mnemonic: "",
   balance: null,
@@ -81,7 +79,6 @@ const Register = () => {
       const wallet = await fdpClient.account.createWallet();
       const response = {
         account: wallet.address,
-        privateKey: wallet.privateKey,
         mnemonic: wallet.mnemonic.phrase,
       };
       setData({
@@ -126,21 +123,13 @@ const Register = () => {
 
   const registerUser = async () => {
     try {
-      const { username, password, privateKey, mnemonic } = data;
+      const { username, password, mnemonic } = data;
 
-      let wallet;
-
-      if (privateKey) {
-        wallet = new Wallet(privateKey);
-      } else if (mnemonic) {
-        wallet = Wallet.fromMnemonic(mnemonic);
-      } else {
-        throw new Error(
-          "Private key or mnemonic must be set in order to register account"
-        );
+      if (!mnemonic) {
+        throw new Error("Mnemonic must be set in order to register account");
       }
 
-      fdpClient.account.setActiveAccount(wallet);
+      fdpClient.account.setAccountFromMnemonic(mnemonic);
 
       await fdpClient.account.register(username, password);
 
@@ -167,6 +156,13 @@ const Register = () => {
       message = "EXISTING_ACCOUNT_INSTRUCTIONS";
     } else if (step === Steps.WaitingPayment) {
       message = "WAITING_FOR_PAYMENT_INSTRUCTIONS";
+      if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
+        return (
+          intl.get(message) +
+          " " +
+          intl.get("WAITING_FOR_PAYMENT_AMOUNT_GOERLI")
+        );
+      }
     } else if (step === Steps.Complete) {
       message = "REGISTRATION_COMPLETE";
     }
@@ -177,7 +173,9 @@ const Register = () => {
   const reset = () => {
     setData(emptyState);
     setError(null);
-    if (data.balance) {
+    if (!data.account) {
+      registerUser();
+    } else if (data.balance) {
       onPaymentConfirmed(data.balance);
     } else {
       setStep(Steps.WaitingPayment);
@@ -199,6 +197,19 @@ const Register = () => {
 
   return (
     <Wrapper>
+      {process.env.REACT_APP_ENVIRONMENT === "GOERLI" && (
+        <Typography
+          variant="body1"
+          align="center"
+          sx={{
+            marginBottom: "20px",
+            color: "#f19200",
+          }}
+        >
+          {intl.get("GOERLI_INFO")}
+        </Typography>
+      )}
+
       <Title>{intl.get("REGISTER_TITLE")}</Title>
       <Typography
         variant="body1"

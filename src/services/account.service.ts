@@ -2,10 +2,11 @@ import { BigNumber, providers, Wallet } from "ethers";
 
 import { Account } from "../model/general.types";
 import { RegisterResponse } from "../model/internal-messages.model";
+import { getEnsConfig } from "../utils/ens.utils";
 
-const provider = new providers.JsonRpcProvider(
-  process.env.REACT_APP_RPC_URL as string
-);
+const ensConfig = getEnsConfig();
+
+const provider = new providers.JsonRpcProvider(ensConfig.ensOptions.rpcUrl);
 
 export async function generateWallet(): Promise<RegisterResponse> {
   try {

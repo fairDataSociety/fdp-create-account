@@ -44,7 +44,7 @@ const MnemonicConfirmation = ({
 
   const removeSelected = (word: string) => {
     const selectedCopy = [...selected];
-    selectedCopy.splice(selectedCopy.indexOf(word), 1);
+    selectedCopy.splice(selectedCopy.indexOf(word), 12);
     setSelected(selectedCopy);
   };
 
