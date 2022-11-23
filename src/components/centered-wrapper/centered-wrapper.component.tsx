@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "@mui/system";
+import { Web3Button } from "@web3modal/react";
 
 export interface CenteredWrapperProps {
   children: React.ReactNode;
@@ -11,7 +12,7 @@ const WrapperDiv = styled("div")({
 });
 
 const InnerDiv = styled("div")(({ theme }) => ({
-  displey: "flex",
+  display: "flex",
   margin: "auto",
   minWidth: "500px",
   [theme.breakpoints.down("sm")]: {
@@ -20,11 +21,12 @@ const InnerDiv = styled("div")(({ theme }) => ({
 }));
 
 const CenteredWrapper = ({ children }: CenteredWrapperProps) => {
-  return (
+return ( <>
+    <Web3Button />
     <WrapperDiv>
       <InnerDiv>{children}</InnerDiv>
     </WrapperDiv>
-  );
+  </>);
 };
 
 export default CenteredWrapper;
