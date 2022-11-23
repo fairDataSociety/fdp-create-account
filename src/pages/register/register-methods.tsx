@@ -44,7 +44,7 @@ const RegisterMethods = ({
         onClick={onNewAccountSelect}
         data-testid="register-new"
       >
-        {intl.get("NEW_ACCOUNT")}
+        {intl.get("NEW_ADDRESS")}
       </Button>
       <Button
         variant="contained"
@@ -68,7 +68,7 @@ const RegisterMethods = ({
         onClick={onExistingAccountSelect}
         data-testid="existing-account"
       >
-        {intl.get("EXISTING_ACCOUNT")}
+        {intl.get("EXISTING_ADDRESS")}
       </Button>
     </Wrapper>
   );

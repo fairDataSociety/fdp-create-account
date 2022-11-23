@@ -51,7 +51,7 @@ const WaitingPayment = ({
   };
 
   useEffect(() => {
-    timer.current = setInterval(checkPayment, 10000);
+    timer.current = setInterval(checkPayment, 15000);
 
     return closeTimer;
   }, []);
