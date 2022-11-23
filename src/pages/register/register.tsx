@@ -207,6 +207,20 @@ const Register = () => {
           }}
         >
           {intl.get("GOERLI_INFO")}
+          {/* TODO For testing only */}
+          <div>
+            <div>REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}</div>
+            <div>REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}</div>
+            <div>
+              REACT_APP_BLOCKCHAIN_INFO: {process.env.REACT_APP_BLOCKCHAIN_INFO}
+            </div>
+            <div>
+              REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}
+            </div>
+            <div>
+              REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}
+            </div>
+          </div>
         </Typography>
       )}
 
