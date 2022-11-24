@@ -39,7 +39,7 @@ const chains = [gnosis, chain.goerli];
 
 // Wagmi client
 const { provider } = configureChains(chains, [
-  walletConnectProvider({ projectId: "<YOUR_PROJECT_ID>" }),
+  walletConnectProvider({ projectId: process.env.REACT_APP_WEB3_MODAL_PROJECT_ID as string }),
 ]);
 const wagmiClient = createClient({
   autoConnect: true,
@@ -76,7 +76,7 @@ const App = () => {
       </HashRouter>
 
       <Web3Modal
-        projectId="0cf3b12a747db227ed968b4527097c13"
+        projectId={process.env.REACT_APP_WEB3_MODAL_PROJECT_ID}
         theme="dark"
         accentColor="default"
         ethereumClient={ethereumClient}

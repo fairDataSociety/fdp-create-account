@@ -93,7 +93,10 @@ const WaitingPayment = ({
 
           <button
             disabled={isLoading || !sendTransaction}
-            onClick={() => sendTransaction?.()}
+            onClick={(e) => {
+              e.preventDefault();
+              sendTransaction?.();
+            }}
           >
             {isLoading ? "Sending..." : "Send"}
           </button>

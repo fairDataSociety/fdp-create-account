@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "@mui/system";
-import { Web3Button } from "@web3modal/react";
 
 export interface CenteredWrapperProps {
   children: React.ReactNode;
