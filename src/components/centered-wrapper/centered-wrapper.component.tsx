@@ -22,7 +22,6 @@ const InnerDiv = styled("div")(({ theme }) => ({
 
 const CenteredWrapper = ({ children }: CenteredWrapperProps) => {
 return ( <>
-    <Web3Button />
     <WrapperDiv>
       <InnerDiv>{children}</InnerDiv>
     </WrapperDiv>
