@@ -11,7 +11,7 @@ const WrapperDiv = styled("div")({
 });
 
 const InnerDiv = styled("div")(({ theme }) => ({
-  displey: "flex",
+  display: "flex",
   margin: "auto",
   minWidth: "500px",
   [theme.breakpoints.down("sm")]: {
@@ -20,11 +20,11 @@ const InnerDiv = styled("div")(({ theme }) => ({
 }));
 
 const CenteredWrapper = ({ children }: CenteredWrapperProps) => {
-  return (
+return ( <>
     <WrapperDiv>
       <InnerDiv>{children}</InnerDiv>
     </WrapperDiv>
-  );
+  </>);
 };
 
 export default CenteredWrapper;

@@ -28,40 +28,42 @@ const MnemonicConfirmation = ({
   phrase,
   onConfirm,
 }: MnemonicConfirmationProps) => {
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<number[]>([]);
   const words = useMemo<string[]>(
     () => shuffleArray(phrase.split(" ")),
     [phrase]
   );
 
-  const isSelected = (word: string): boolean => {
-    return selected.indexOf(word) >= 0;
+  const isSelected = (index: number): boolean => {
+    return selected.indexOf(index) >= 0;
   };
 
-  const addSelected = (word: string) => {
-    setSelected([...selected, word]);
+  const addSelected = (index: number) => {
+    setSelected([...selected, index]);
   };
 
-  const removeSelected = (word: string) => {
+  const removeSelected = (index: number) => {
     const selectedCopy = [...selected];
-    selectedCopy.splice(selectedCopy.indexOf(word), 12);
+    selectedCopy.splice(selectedCopy.indexOf(index), 12);
     setSelected(selectedCopy);
   };
 
-  const isOrderCorrect = () => selected.join(" ") === phrase;
+  const isOrderCorrect = () => {
+    return selected.map((index) => words[index]).join(" ") === phrase;
+  };
 
   return (
     <FlexColumnDiv>
       <ContainerDiv data-testid="mnemonic-confirmation">
         {words.map((word, index) => {
-          const selected = isSelected(word);
+          const selected = isSelected(index);
 
           return (
             <Chip
               key={index}
               label={word}
               onClick={() =>
-                selected ? removeSelected(word) : addSelected(word)
+                selected ? removeSelected(index) : addSelected(index)
               }
               variant={selected ? "filled" : "outlined"}
               sx={{
@@ -74,9 +76,9 @@ const MnemonicConfirmation = ({
         })}
       </ContainerDiv>
       <ListDiv>
-        {selected.map((word, index) => (
-          <Typography variant="h5" key={word} sx={{ margin: "4px 0" }}>
-            {index + 1}. {word}
+        {selected.map((wordIndex, index) => (
+          <Typography variant="h5" key={wordIndex} sx={{ margin: "4px 0" }}>
+            {index + 1}. {words[wordIndex]}
           </Typography>
         ))}
       </ListDiv>

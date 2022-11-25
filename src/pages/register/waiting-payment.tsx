@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { InjectedConnector } from "wagmi/connectors/injected";
 import { utils } from "ethers";
 import intl from "react-intl-universal";
 import { styled } from "@mui/system";
@@ -6,6 +7,15 @@ import { CircularProgress, Typography } from "@mui/material";
 import { Account } from "../../model/general.types";
 import ClipboardButton from "../../components/clipboard-button/clipboard-button.component";
 import { getAccountBalance } from "../../services/account.service";
+import {
+  useAccount,
+  useEnsName,
+  useConnect,
+  usePrepareSendTransaction,
+  useSendTransaction,
+  useWaitForTransaction,
+} from "wagmi";
+import { Web3Button } from "@web3modal/react";
 
 export interface WaitingPaymentProps {
   account: Account;
@@ -33,28 +43,33 @@ const WaitingPayment = ({
       const balance = await getAccountBalance(account);
 
       if (balance.gt(0)) {
-        closeTimer();
         onPaymentDetected(`${utils.formatEther(balance)} ETH`);
       }
     } catch (error) {
       console.error(error);
-      closeTimer();
       onError(error);
     }
   };
 
-  const closeTimer = () => {
-    if (timer.current) {
-      clearInterval(timer.current);
-      timer.current = null;
-    }
-  };
+  const { address, isConnected } = useAccount();
 
-  useEffect(() => {
-    timer.current = setInterval(checkPayment, 15000);
+  const amount = "0.01";
+  const { config } = usePrepareSendTransaction({
+    request: {
+      to: account,
+      value: utils.parseEther(amount),
+    },
+  });
 
-    return closeTimer;
-  }, []);
+  const { sendTransaction, data } = useSendTransaction(config);
+
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
+  if (isSuccess) {
+    checkPayment();
+  }
 
   return (
     <ContainerDiv>
@@ -63,18 +78,45 @@ const WaitingPayment = ({
           {networkInfo}
         </Typography>
       )}
-      <Typography variant="h5" sx={{ margin: "auto" }}>
-        <span data-testid="account">{account}</span>
-        <ClipboardButton text={account} />
-      </Typography>
-      <CircularProgress sx={{ margin: "auto", marginTop: "30px" }} />
-      <Typography
-        variant="body1"
-        align="center"
-        sx={{ margin: "auto", marginTop: "30px" }}
-      >
-        {intl.get("DISCLAIMER")}
-      </Typography>
+      <Web3Button />
+
+      {isConnected && (
+        <>
+          <Typography variant="h5" sx={{ margin: "auto" }}>
+            <span data-testid="account">{account}</span>
+            <ClipboardButton text={account} />
+          </Typography>
+
+          {isLoading && (
+            <CircularProgress sx={{ margin: "auto", marginTop: "30px" }} />
+          )}
+
+          <button
+            disabled={isLoading || !sendTransaction}
+            onClick={(e) => {
+              e.preventDefault();
+              sendTransaction?.();
+            }}
+          >
+            {isLoading ? "Sending..." : "Send"}
+          </button>
+          {isSuccess && (
+            <div>
+              Successfully sent {amount} ether to {account}
+              <div>
+                <a href={`https://etherscan.io/tx/${data?.hash}`}>Etherscan</a>
+              </div>
+            </div>
+          )}
+          <Typography
+            variant="body1"
+            align="center"
+            sx={{ margin: "auto", marginTop: "30px" }}
+          >
+            {intl.get("DISCLAIMER")}
+          </Typography>
+        </>
+      )}
     </ContainerDiv>
   );
 };
