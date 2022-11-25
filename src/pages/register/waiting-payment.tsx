@@ -1,5 +1,4 @@
-import React, { useEffect, useRef } from "react";
-import { InjectedConnector } from "wagmi/connectors/injected";
+import { useRef } from "react";
 import { utils } from "ethers";
 import intl from "react-intl-universal";
 import { styled } from "@mui/system";
@@ -9,13 +8,10 @@ import ClipboardButton from "../../components/clipboard-button/clipboard-button.
 import { getAccountBalance } from "../../services/account.service";
 import {
   useAccount,
-  useEnsName,
-  useConnect,
   usePrepareSendTransaction,
   useSendTransaction,
   useWaitForTransaction,
 } from "wagmi";
-import { Web3Button } from "@web3modal/react";
 
 export interface WaitingPaymentProps {
   account: Account;
@@ -78,7 +74,6 @@ const WaitingPayment = ({
           {networkInfo}
         </Typography>
       )}
-      <Web3Button />
 
       {isConnected && (
         <>
@@ -103,9 +98,6 @@ const WaitingPayment = ({
           {isSuccess && (
             <div>
               Successfully sent {amount} ether to {account}
-              <div>
-                <a href={`https://etherscan.io/tx/${data?.hash}`}>Etherscan</a>
-              </div>
             </div>
           )}
           <Typography

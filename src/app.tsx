@@ -35,7 +35,13 @@ const gnosis: Chain = {
   },
   testnet: false,
 }
-const chains = [gnosis, chain.goerli];
+const chains = []
+
+if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
+  chains.push(chain.goerli)
+} else {
+  chains.push(gnosis)
+}
 
 // Wagmi client
 const { provider } = configureChains(chains, [
