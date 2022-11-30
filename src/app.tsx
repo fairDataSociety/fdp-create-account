@@ -83,8 +83,6 @@ const App = () => {
 
       <Web3Modal
         projectId={process.env.REACT_APP_WEB3_MODAL_PROJECT_ID}
-        theme="dark"
-        accentColor="default"
         ethereumClient={ethereumClient}
       />
     </>
