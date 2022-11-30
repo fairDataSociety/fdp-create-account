@@ -35,7 +35,13 @@ const gnosis: Chain = {
   },
   testnet: false,
 }
-const chains = [gnosis, chain.goerli];
+const chains = []
+
+if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
+  chains.push(chain.goerli)
+} else {
+  chains.push(gnosis)
+}
 
 // Wagmi client
 const { provider } = configureChains(chains, [
@@ -77,8 +83,6 @@ const App = () => {
 
       <Web3Modal
         projectId={process.env.REACT_APP_WEB3_MODAL_PROJECT_ID}
-        theme="dark"
-        accentColor="default"
         ethereumClient={ethereumClient}
       />
     </>
