@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { utils } from "ethers";
 import intl from "react-intl-universal";
 import { styled } from "@mui/system";
@@ -32,6 +32,19 @@ const WaitingPayment = ({
   onPaymentDetected,
   onError,
 }: WaitingPaymentProps) => {
+  const amount = "0.01";
+  const { isConnected } = useAccount();
+  const { config } = usePrepareSendTransaction({
+    request: {
+      to: account,
+      value: utils.parseEther(amount),
+    },
+  });
+  const { sendTransaction, data } = useSendTransaction(config);
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
   const timer = useRef<NodeJS.Timeout | null>();
 
   const checkPayment = async () => {
@@ -39,33 +52,32 @@ const WaitingPayment = ({
       const balance = await getAccountBalance(account);
 
       if (balance.gt(0)) {
+        closeTimer();
         onPaymentDetected(`${utils.formatEther(balance)} ETH`);
       }
     } catch (error) {
       console.error(error);
+      closeTimer();
       onError(error);
     }
   };
 
-  const { address, isConnected } = useAccount();
-
-  const amount = "0.01";
-  const { config } = usePrepareSendTransaction({
-    request: {
-      to: account,
-      value: utils.parseEther(amount),
-    },
-  });
-
-  const { sendTransaction, data } = useSendTransaction(config);
-
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
-  });
+  const closeTimer = () => {
+    if (timer.current) {
+      clearInterval(timer.current);
+      timer.current = null;
+    }
+  };
 
   if (isSuccess) {
     checkPayment();
   }
+
+  useEffect(() => {
+    timer.current = setInterval(checkPayment, 15000);
+
+    return closeTimer;
+  }, []);
 
   return (
     <ContainerDiv>
@@ -75,17 +87,15 @@ const WaitingPayment = ({
         </Typography>
       )}
 
+      <Typography variant="h5" sx={{ margin: "auto" }}>
+        <span data-testid="account">{account}</span>
+        <ClipboardButton text={account} />
+      </Typography>
+
+      <CircularProgress sx={{ margin: "auto", marginTop: "30px" }} />
+
       {isConnected && (
         <>
-          <Typography variant="h5" sx={{ margin: "auto" }}>
-            <span data-testid="account">{account}</span>
-            <ClipboardButton text={account} />
-          </Typography>
-
-          {isLoading && (
-            <CircularProgress sx={{ margin: "auto", marginTop: "30px" }} />
-          )}
-
           <button
             disabled={isLoading || !sendTransaction}
             onClick={(e) => {
@@ -100,15 +110,16 @@ const WaitingPayment = ({
               Successfully sent {amount} ether to {account}
             </div>
           )}
-          <Typography
-            variant="body1"
-            align="center"
-            sx={{ margin: "auto", marginTop: "30px" }}
-          >
-            {intl.get("DISCLAIMER")}
-          </Typography>
         </>
       )}
+
+      <Typography
+        variant="body1"
+        align="center"
+        sx={{ margin: "auto", marginTop: "30px" }}
+      >
+        {intl.get("DISCLAIMER")}
+      </Typography>
     </ContainerDiv>
   );
 };
