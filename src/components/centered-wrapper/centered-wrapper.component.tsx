@@ -24,12 +24,14 @@ const CenteredWrapper = ({ children }: CenteredWrapperProps) => {
   return (
     <>
       <WrapperDiv>
-        <Web3Button />
+        <div style={{ position: 'absolute', right: '10px' }}>
+          <Web3Button />
+        </div>
 
         <InnerDiv>{children}</InnerDiv>
       </WrapperDiv>
     </>
-  );
+  )
 };
 
 export default CenteredWrapper;
