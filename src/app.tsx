@@ -1,22 +1,23 @@
 import React, { useEffect } from "react";
 import { ThemeProvider } from "@mui/system";
 import { HashRouter } from "react-router-dom";
-import { CssBaseline } from "@mui/material";
-import defaultTheme from "./style/light-theme";
-import { LocalesContextProvider } from "./context/locales.context";
-import Routes from "./routes/routes";
-import CenteredWrapper from "./components/centered-wrapper/centered-wrapper.component";
-import { FdpStorageProvider } from "./context/fdp.context";
-import Footer from "./components/footer/footer";
+import { CssBaseline, Typography } from '@mui/material'
+import defaultTheme from './style/light-theme'
+import { LocalesContextProvider } from './context/locales.context'
+import Routes from './routes/routes'
+import CenteredWrapper from './components/centered-wrapper/centered-wrapper.component'
+import { FdpStorageProvider } from './context/fdp.context'
+import intl from 'react-intl-universal'
+import Footer from './components/footer/footer'
 import {
   EthereumClient,
   modalConnectors,
   walletConnectProvider,
-} from "@web3modal/ethereum";
+} from '@web3modal/ethereum'
 
-import { Web3Modal } from "@web3modal/react";
+import { Web3Modal } from '@web3modal/react'
 
-import { Chain, chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { Chain, chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 
 const gnosis: Chain = {
   id: 100,
@@ -37,7 +38,7 @@ const gnosis: Chain = {
 }
 const chains = []
 
-if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
+if (process.env.REACT_APP_ENVIRONMENT === 'GOERLI') {
   chains.push(chain.goerli)
 } else {
   chains.push(gnosis)
@@ -45,21 +46,23 @@ if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
 
 // Wagmi client
 const { provider } = configureChains(chains, [
-  walletConnectProvider({ projectId: process.env.REACT_APP_WEB3_MODAL_PROJECT_ID as string }),
-]);
+  walletConnectProvider({
+    projectId: process.env.REACT_APP_WEB3_MODAL_PROJECT_ID as string,
+  }),
+])
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors: modalConnectors({ appName: "web3Modal", chains }),
+  connectors: modalConnectors({ appName: 'web3Modal', chains }),
   provider,
-});
+})
 
 // Web3Modal Ethereum Client
-const ethereumClient = new EthereumClient(wagmiClient, chains);
+const ethereumClient = new EthereumClient(wagmiClient, chains)
 
 const App = () => {
   useEffect(() => {
-    document.title = "Fair Data Society";
-  }, []);
+    document.title = 'Fair Data Society'
+  }, [])
 
   return (
     <>
@@ -74,6 +77,41 @@ const App = () => {
                     <Routes />
                   </CenteredWrapper>
                   <Footer />
+                  <>
+                    {process.env.REACT_APP_ENVIRONMENT !== 'GOERLI' && (
+                      <Typography
+                        variant="body1"
+                        align="center"
+                        sx={{
+                          marginBottom: '20px',
+                          color: '#f19200',
+                          fontSize: '12px',
+                        }}
+                      >
+                        {intl.get('GOERLI_INFO')}
+                        <div>
+                          <div>
+                            REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}
+                          </div>
+                          <div>
+                            REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}
+                          </div>
+                          <div>
+                            REACT_APP_BLOCKCHAIN_INFO:{' '}
+                            {process.env.REACT_APP_BLOCKCHAIN_INFO}
+                          </div>
+                          <div>
+                            REACT_APP_ENVIRONMENT:{' '}
+                            {process.env.REACT_APP_ENVIRONMENT}
+                          </div>
+                          <div>
+                            REACT_APP_ENVIRONMENT:{' '}
+                            {process.env.REACT_APP_ENVIRONMENT}
+                          </div>
+                        </div>
+                      </Typography>
+                    )}
+                  </>
                 </LocalesContextProvider>
               </FdpStorageProvider>
             </React.StrictMode>
@@ -86,7 +124,7 @@ const App = () => {
         ethereumClient={ethereumClient}
       />
     </>
-  );
-};
+  )
+}
 
 export default App;

@@ -197,6 +197,29 @@ const Register = () => {
 
   return (
     <Wrapper>
+      {/* {process.env.REACT_APP_ENVIRONMENT === 'GOERLI' && (
+        <Typography
+          variant="body1"
+          align="center"
+          sx={{
+            marginBottom: '20px',
+            color: '#f19200',
+            fontSize: '14px',
+          }}
+        >
+          {intl.get('GOERLI_INFO')}
+          <div>
+            <div>REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}</div>
+            <div>REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}</div>
+            <div>
+              REACT_APP_BLOCKCHAIN_INFO: {process.env.REACT_APP_BLOCKCHAIN_INFO}
+            </div>
+            <div>REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}</div>
+            <div>REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}</div>
+          </div>
+        </Typography>
+      )} */}
+
       <Title>{intl.get('REGISTER_TITLE')}</Title>
       <Typography
         variant="body1"
@@ -259,29 +282,6 @@ const Register = () => {
             {intl.get('TRY_AGAIN')}
           </Button>
         </LoaderWrapperDiv>
-      )}
-
-      {process.env.REACT_APP_ENVIRONMENT === 'GOERLI' && (
-        <Typography
-          variant="body1"
-          align="center"
-          sx={{
-            marginBottom: '20px',
-            color: '#f19200',
-            fontSize: '5px',
-          }}
-        >
-          {intl.get('GOERLI_INFO')}
-          <div>
-            <div>REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}</div>
-            <div>REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}</div>
-            <div>
-              REACT_APP_BLOCKCHAIN_INFO: {process.env.REACT_APP_BLOCKCHAIN_INFO}
-            </div>
-            <div>REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}</div>
-            <div>REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}</div>
-          </div>
-        </Typography>
       )}
     </Wrapper>
   )
