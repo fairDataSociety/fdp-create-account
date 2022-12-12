@@ -197,39 +197,12 @@ const Register = () => {
 
   return (
     <Wrapper>
-      {process.env.REACT_APP_ENVIRONMENT === "GOERLI" && (
-        <Typography
-          variant="body1"
-          align="center"
-          sx={{
-            marginBottom: "20px",
-            color: "#f19200",
-          }}
-        >
-          {intl.get("GOERLI_INFO")}
-          {/* TODO For testing only */}
-          <div>
-            <div>REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}</div>
-            <div>REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}</div>
-            <div>
-              REACT_APP_BLOCKCHAIN_INFO: {process.env.REACT_APP_BLOCKCHAIN_INFO}
-            </div>
-            <div>
-              REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}
-            </div>
-            <div>
-              REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}
-            </div>
-          </div>
-        </Typography>
-      )}
-
-      <Title>{intl.get("REGISTER_TITLE")}</Title>
+      <Title>{intl.get('REGISTER_TITLE')}</Title>
       <Typography
         variant="body1"
         align="center"
         sx={{
-          marginTop: "20px",
+          marginTop: '20px',
         }}
       >
         {getStepInstructionMessage(step)}
@@ -237,7 +210,7 @@ const Register = () => {
       {step === Steps.UsernamePassword && (
         <>
           <UsernamePassword onSubmit={onUsernamePasswordSubmit} />
-          <Link to={RouteCodes.migrate}>{intl.get("MIGRATION_LINK")}</Link>
+          <Link to={RouteCodes.migrate}>{intl.get('MIGRATION_LINK')}</Link>
         </>
       )}
       {step === Steps.ChooseMethod && (
@@ -274,21 +247,44 @@ const Register = () => {
       )}
       {step === Steps.Loading && (
         <LoaderWrapperDiv>
-          <CircularProgress sx={{ margin: "auto" }} />
+          <CircularProgress sx={{ margin: 'auto' }} />
         </LoaderWrapperDiv>
       )}
       {step === Steps.Error && (
-        <LoaderWrapperDiv sx={{ flexDirection: "column" }}>
+        <LoaderWrapperDiv sx={{ flexDirection: 'column' }}>
           <ErrorMessage>
-            {intl.get("REGISTRATION_ERROR") + (error || "")}
+            {intl.get('REGISTRATION_ERROR') + (error || '')}
           </ErrorMessage>
-          <Button onClick={reset} sx={{ marginTop: "20px" }}>
-            {intl.get("TRY_AGAIN")}
+          <Button onClick={reset} sx={{ marginTop: '20px' }}>
+            {intl.get('TRY_AGAIN')}
           </Button>
         </LoaderWrapperDiv>
       )}
+
+      {process.env.REACT_APP_ENVIRONMENT === 'GOERLI' && (
+        <Typography
+          variant="body1"
+          align="center"
+          sx={{
+            marginBottom: '20px',
+            color: '#f19200',
+            fontSize: '5px',
+          }}
+        >
+          {intl.get('GOERLI_INFO')}
+          <div>
+            <div>REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}</div>
+            <div>REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}</div>
+            <div>
+              REACT_APP_BLOCKCHAIN_INFO: {process.env.REACT_APP_BLOCKCHAIN_INFO}
+            </div>
+            <div>REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}</div>
+            <div>REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}</div>
+          </div>
+        </Typography>
+      )}
     </Wrapper>
-  );
+  )
 };
 
 export default Register;
