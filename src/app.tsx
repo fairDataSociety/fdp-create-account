@@ -91,22 +91,24 @@ const App = () => {
                         {intl.get('GOERLI_INFO')}
                         <div>
                           <div>
-                            REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}
+                            REACT_APP_BEE_URL:
+                            <strong>{process.env.REACT_APP_BEE_URL}</strong>
                           </div>
                           <div>
-                            REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}
+                            REACT_APP_FAIROS_URL:
+                            <strong>{process.env.REACT_APP_FAIROS_URL}</strong>
                           </div>
                           <div>
-                            REACT_APP_BLOCKCHAIN_INFO:{' '}
-                            {process.env.REACT_APP_BLOCKCHAIN_INFO}
+                            REACT_APP_BLOCKCHAIN_INFO:
+                            <strong>{process.env.REACT_APP_BLOCKCHAIN_INFO}</strong>
                           </div>
                           <div>
-                            REACT_APP_ENVIRONMENT:{' '}
-                            {process.env.REACT_APP_ENVIRONMENT}
+                            REACT_APP_ENVIRONMENT:
+                            <strong>{process.env.REACT_APP_ENVIRONMENT}</strong>
                           </div>
                           <div>
-                            REACT_APP_ENVIRONMENT:{' '}
-                            {process.env.REACT_APP_ENVIRONMENT}
+                            REACT_APP_ENVIRONMENT:
+                            <strong>{process.env.REACT_APP_ENVIRONMENT}</strong>
                           </div>
                         </div>
                       </Typography>
