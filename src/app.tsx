@@ -78,7 +78,7 @@ const App = () => {
                   </CenteredWrapper>
                   <Footer />
                   <>
-                    {process.env.REACT_APP_ENVIRONMENT !== 'GOERLI' && (
+                    {process.env.REACT_APP_ENVIRONMENT === 'GOERLI' && (
                       <Typography
                         variant="body1"
                         align="center"
