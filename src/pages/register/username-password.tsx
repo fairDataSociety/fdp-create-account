@@ -6,6 +6,7 @@ import Form from "../../components/form/form.component";
 import { RegisterData } from "../../model/internal-messages.model";
 import { useFdpStorage } from "../../context/fdp.context";
 import { isPasswordValid } from "../../utils/ens.utils";
+import Disclaimer from "../../components/disclaimer/disclaimer.component";
 
 export interface UsernamePasswordProps {
   onSubmit: (data: RegisterData) => void;
@@ -95,11 +96,12 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
 
   return (
     <Form onSubmit={handleSubmit(onSubmitInternal)}>
+      <Disclaimer />
       <TextField
-        label={intl.get('USERNAME')}
+        label={intl.get("USERNAME")}
         variant="outlined"
         fullWidth
-        {...register('username', { required: true })}
+        {...register("username", { required: true })}
         onChange={() => setUsernameError(null)}
         disabled={loading}
         error={Boolean(errors.username || usernameError)}
@@ -107,15 +109,16 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         data-testid="username"
       />
       <TextField
-        label={intl.get('PASSWORD')}
+        label={intl.get("PASSWORD")}
         variant="outlined"
         type="password"
         fullWidth
-        {...register('password', { required: true })}
+        {...register("password", { required: true })}
         disabled={loading}
         error={Boolean(errors.password || passwordError)}
         helperText={
-          passwordError || (errors.password && intl.get('PASSWORD_REQUIRED_ERROR'))
+          passwordError ||
+          (errors.password && intl.get("PASSWORD_REQUIRED_ERROR"))
         }
         data-testid="password"
       />
@@ -127,13 +130,13 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         disabled={loading}
         data-testid="submit"
         sx={{
-          marginTop: '50px',
+          marginTop: "50px",
         }}
       >
-        {intl.get('REGISTER')}
+        {intl.get("REGISTER")}
       </Button>
     </Form>
-  )
+  );
 };
 
 export default UsernamePassword;
