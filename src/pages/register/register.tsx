@@ -18,7 +18,7 @@ import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
 import { getAccountBalance } from "../../services/account.service";
-import { BigNumber } from "ethers";
+import { utils } from "ethers";
 
 enum Steps {
   UsernamePassword,
@@ -51,6 +51,8 @@ const emptyState: RegistrationState = {
   mnemonic: "",
   balance: null,
 };
+
+const MIN_BALANCE = utils.parseUnits("0.11", "ether");
 
 const Register = () => {
   const { fdpClient } = useFdpStorage();
@@ -138,7 +140,7 @@ const Register = () => {
         fdpClient.account.wallet?.address as string
       );
 
-      if (balance.lt(BigNumber.from("11000000000000000"))) {
+      if (balance.lt(MIN_BALANCE)) {
         throw new Error("Insufficient funds");
       }
 
