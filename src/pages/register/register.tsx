@@ -18,7 +18,7 @@ import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
 import { getAccountBalance } from "../../services/account.service";
-import { utils } from "ethers";
+import { MIN_BALANCE } from "../../constants/constants";
 
 enum Steps {
   UsernamePassword,
@@ -51,8 +51,6 @@ const emptyState: RegistrationState = {
   mnemonic: "",
   balance: null,
 };
-
-const MIN_BALANCE = utils.parseUnits('0.05', 'ether')
 
 const Register = () => {
   const { fdpClient } = useFdpStorage();
