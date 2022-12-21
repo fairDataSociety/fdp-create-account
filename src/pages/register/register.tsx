@@ -17,8 +17,7 @@ import { useFdpStorage } from "../../context/fdp.context";
 import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
-import { getAccountBalance } from "../../services/account.service";
-import { utils } from "ethers";
+import { checkMinBalance } from "../../services/account.service";
 
 enum Steps {
   UsernamePassword,
@@ -51,8 +50,6 @@ const emptyState: RegistrationState = {
   mnemonic: "",
   balance: null,
 };
-
-const MIN_BALANCE = utils.parseUnits("0.11", "ether");
 
 const Register = () => {
   const { fdpClient } = useFdpStorage();
@@ -111,6 +108,30 @@ const Register = () => {
     });
   };
 
+  const onMnemonicChecking = async () => {
+    try {
+      fdpClient.account.setAccountFromMnemonic(data.mnemonic);
+
+      const account = fdpClient.account.wallet?.address as string;
+
+      const canProceed = await checkMinBalance(account);
+
+      setData({
+        ...data,
+        account,
+      });
+
+      if (!canProceed) {
+        setStep(Steps.WaitingPayment);
+        return;
+      }
+
+      registerUser();
+    } catch (error) {
+      onError(error);
+    }
+  };
+
   const onPaymentConfirmed = (balance: string) => {
     setStep(Steps.Loading);
     setData({
@@ -135,12 +156,11 @@ const Register = () => {
 
       fdpClient.account.setAccountFromMnemonic(mnemonic);
 
-      // TODO this check should be removed when fdp-contracts gets updated
-      const balance = await getAccountBalance(
+      const canProceed = await checkMinBalance(
         fdpClient.account.wallet?.address as string
       );
 
-      if (balance.lt(MIN_BALANCE)) {
+      if (!canProceed) {
         throw new Error("Insufficient funds");
       }
 
@@ -198,7 +218,7 @@ const Register = () => {
   useEffect(() => {
     if (data.mnemonic && step === Steps.EnterMnemonic) {
       setStep(Steps.Loading);
-      registerUser();
+      onMnemonicChecking();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.mnemonic]);

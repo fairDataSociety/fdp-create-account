@@ -1,4 +1,5 @@
 import { BigNumber, providers, Wallet } from "ethers";
+import { MIN_BALANCE } from "../constants/constants";
 
 import { Account } from "../model/general.types";
 import { RegisterResponse } from "../model/internal-messages.model";
@@ -26,4 +27,10 @@ export async function generateWallet(): Promise<RegisterResponse> {
 
 export async function getAccountBalance(account: Account): Promise<BigNumber> {
   return provider.getBalance(account);
+}
+
+export async function checkMinBalance(account: Account): Promise<boolean> {
+  const balance = await getAccountBalance(account);
+
+  return balance.gte(MIN_BALANCE);
 }

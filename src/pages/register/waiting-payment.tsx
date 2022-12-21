@@ -12,6 +12,7 @@ import {
   useSendTransaction,
   useWaitForTransaction,
 } from "wagmi";
+import { MIN_BALANCE } from "../../constants/constants";
 
 export interface WaitingPaymentProps {
   account: Account;
@@ -32,12 +33,11 @@ const WaitingPayment = ({
   onPaymentDetected,
   onError,
 }: WaitingPaymentProps) => {
-  const amount = "0.01";
   const { isConnected } = useAccount();
   const { config } = usePrepareSendTransaction({
     request: {
       to: account,
-      value: utils.parseEther(amount),
+      value: MIN_BALANCE,
     },
   });
   const { sendTransaction, data } = useSendTransaction(config);
@@ -49,9 +49,9 @@ const WaitingPayment = ({
 
   const checkPayment = async () => {
     try {
-      const balance = await getAccountBalance(account);
+      const balance = await getAccountBalance(account); // in wei
 
-      if (balance.gt(0)) {
+      if (balance.gte(MIN_BALANCE)) {
         closeTimer();
         onPaymentDetected(`${utils.formatEther(balance)} ETH`);
       }
@@ -111,7 +111,8 @@ const WaitingPayment = ({
           </Button>
           {isSuccess && (
             <div>
-              Successfully sent {amount} ether to {account}
+              Successfully sent {utils.formatEther(MIN_BALANCE)} ether to{" "}
+              {account}
             </div>
           )}
         </>
