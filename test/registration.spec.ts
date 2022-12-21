@@ -77,7 +77,7 @@ async function fillUsernamePasswordForm(
 }
 
 const username = "testuser";
-const password = "pass12345";
+const password = "pass1234567890";
 let mnemonic: string[];
 
 describe("Successful registration tests", () => {
