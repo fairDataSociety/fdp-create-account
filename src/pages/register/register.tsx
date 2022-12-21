@@ -52,7 +52,7 @@ const emptyState: RegistrationState = {
   balance: null,
 };
 
-const MIN_BALANCE = utils.parseUnits("0.11", "ether");
+const MIN_BALANCE = utils.parseUnits('0.05', 'ether')
 
 const Register = () => {
   const { fdpClient } = useFdpStorage();
