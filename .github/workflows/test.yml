@@ -3,54 +3,60 @@ name: Tests
 on:
   pull_request:
     branches:
-      - '**'
+      - "**"
+env:
+  BEE_VERSION: "1.8.2"
 
 jobs:
   test:
     name: runtime tests
     runs-on: ubuntu-latest
-   # env:
-     # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+    # env:
+    # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
     steps:
-    - name: checkout
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-    - name: Install fdp-play
-      run: npm install -g @fairdatasociety/fdp-play
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
-    - name: Get npm cache directory
-      id: npm-cache-dir
-      run: |
-        echo "::set-output name=dir::$(npm config get cache)"
-    - uses: actions/cache@v3
-      id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
-      with:
-        path: ${{ steps.npm-cache-dir.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - name: Install npm deps
-      #if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: npm ci --cache .npm
-      
-    - name: Run fdp-play
-      run: fdp-play start -d --bee-version 1.6.2
-      
-    - name: npm start
-      run: |
-           npm start &
-      env:
-        CI: false
-    
-    - name: tests
-      run: |
-           export DISPLAY=:99
-           chromedriver --url-base=/wd/hub &
-           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-           npm run test:puppeteer
-    - name: buy stamps
-      run: curl --fail -s -XPOST http://localhost:1635/stamps/10000000/18
-      
-    - name: try funding
-      run: node ./scripts/fund-new-account.js 0x0f3aB6765858fe0b85009023A2f8e6CA02fd8aa2 0.005
+      - name: Install fdp-play
+        run: npm install -g @fairdatasociety/fdp-play
+
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+
+      - uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install npm deps
+        # if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci --cache .npm
+
+      - name: Run fdp-play
+        run: fdp-play start -d --bee-version $BEE_VERSION
+
+      - name: copy config
+        run: cp .test.env .env
+
+      - name: buy stamps and npm start
+        run: |
+          curl -s -XPOST http://localhost:1635/stamps/10000000/18 | npm run start:batch --batch=$(cut -c 13-76) &
+        env:
+          CI: false
+
+      - name: wait for environment and batch
+        run: sleep 200
+
+      - name: tests
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+          npm run test:puppeteer

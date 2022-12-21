@@ -9,12 +9,15 @@ To configure the application, create an `.env` file in the root directory. Set t
 - **REACT_APP_BEE_URL** - Address of a bee node
 - **REACT_APP_BEE_DEBUG_URL** - Address of bee debug API
 - **REACT_APP_FAIROS_URL** - FairOS URL (used only for migration)
+- **REACT_APP_FAIRDRIVE_URL** - Fairdrive URL
+- **REACT_APP_BATCH_ID** - Postage batch ID (optional)
 - **REACT_APP_BLOCKCHAIN_INFO** - Name of the blockchain network displayed to users (optional) ie. goerli,
 - **REACT_APP_ENVIRONMENT** - ENS environment: LOCALHOST or GOERLI. If the environment is specified the following variables are not required.
 - **REACT_APP_RPC_URL** - Address of RPC provider
 - **REACT_APP_ENS_REGISTRY_ADDRESS** - ENS Registry contract address
 - **REACT_APP_SUBDOMAIN_REGISTRAR_ADDRESS** - Subdomain registrar contract address
 - **REACT_APP_PUBLIC_RESOLVER_ADDRESS** - Public Resolver contract address
+- **REACT_APP_WEB3_MODAL_PROJECT_ID** - Web3Modal Project ID
 
 If the latest `fdp-contract` image is used as RPC provider, then contract addresses can be omitted.
 
@@ -25,10 +28,10 @@ If the latest `fdp-contract` image is used as RPC provider, then contract addres
 - **PublicResolver** deployed to: 0x920A3959c37036B59AA21cD8f259e91830CA8BF8
 
 # FairOS Testnet uses these Deployment addresses
-- FDS Registry:   0xF4C9Cd25031E3BB8c5618299bf35b349c1aAb6A9
-- ENS Registry:   0x42B22483e3c8dF794f351939620572d1a3193c12
-- PublicResolver: 0xbfeCC6c32B224F7D0026ac86506Fe40A9607BD14
 
+- FDS Registry: 0xF4C9Cd25031E3BB8c5618299bf35b349c1aAb6A9
+- ENS Registry: 0x42B22483e3c8dF794f351939620572d1a3193c12
+- PublicResolver: 0xbfeCC6c32B224F7D0026ac86506Fe40A9607BD14
 
 > **_NOTE_:** Check the `.default.env` file for more information
 

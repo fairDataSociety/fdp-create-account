@@ -17,6 +17,8 @@ import { useFdpStorage } from "../../context/fdp.context";
 import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
+import { getAccountBalance } from "../../services/account.service";
+import { utils } from "ethers";
 
 enum Steps {
   UsernamePassword,
@@ -49,6 +51,8 @@ const emptyState: RegistrationState = {
   mnemonic: "",
   balance: null,
 };
+
+const MIN_BALANCE = utils.parseUnits("0.11", "ether");
 
 const Register = () => {
   const { fdpClient } = useFdpStorage();
@@ -131,6 +135,15 @@ const Register = () => {
 
       fdpClient.account.setAccountFromMnemonic(mnemonic);
 
+      // TODO this check should be removed when fdp-contracts gets updated
+      const balance = await getAccountBalance(
+        fdpClient.account.wallet?.address as string
+      );
+
+      if (balance.lt(MIN_BALANCE)) {
+        throw new Error("Insufficient funds");
+      }
+
       await fdpClient.account.register(username, password);
 
       setStep(Steps.Complete);
@@ -197,18 +210,28 @@ const Register = () => {
 
   return (
     <Wrapper>
-      {process.env.REACT_APP_ENVIRONMENT === "GOERLI" && (
+      {/* {process.env.REACT_APP_ENVIRONMENT === 'GOERLI' && (
         <Typography
           variant="body1"
           align="center"
           sx={{
-            marginBottom: "20px",
-            color: "#f19200",
+            marginBottom: '20px',
+            color: '#f19200',
+            fontSize: '14px',
           }}
         >
-          {intl.get("GOERLI_INFO")}
+          {intl.get('GOERLI_INFO')}
+          <div>
+            <div>REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}</div>
+            <div>REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}</div>
+            <div>
+              REACT_APP_BLOCKCHAIN_INFO: {process.env.REACT_APP_BLOCKCHAIN_INFO}
+            </div>
+            <div>REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}</div>
+            <div>REACT_APP_ENVIRONMENT: {process.env.REACT_APP_ENVIRONMENT}</div>
+          </div>
         </Typography>
-      )}
+      )} */}
 
       <Title>{intl.get("REGISTER_TITLE")}</Title>
       <Typography
