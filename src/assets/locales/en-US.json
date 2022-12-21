@@ -25,7 +25,7 @@
   "PASSWORD_TOO_SHORT": "Password is too short. It should be at least 8 characters long.",
   "OK": "OK",
   "REGISTRATION_ERROR": "Error while registering your account: ",
-  "WAITING_FOR_PAYMENT_INSTRUCTIONS": "To complete registration you need to provide funds to your newly created address. Registration will continue afterwards.",
+  "WAITING_FOR_PAYMENT_INSTRUCTIONS": "To complete registration you need to provide funds to your address. Registration will continue afterwards.",
   "WAITING_FOR_PAYMENT_AMOUNT_GOERLI": "Suggested amounts for Goerli testnet are 0.1 gEth.",
   "REGISTRATION_COMPLETE": "Congratulations, you have created a Fair Data Society account.",
   "TRY_AGAIN": "Try Again",
