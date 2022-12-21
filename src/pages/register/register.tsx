@@ -200,6 +200,7 @@ const Register = () => {
       setStep(Steps.Loading);
       registerUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.mnemonic]);
 
   useEffect(() => {
