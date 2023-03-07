@@ -17,6 +17,7 @@ import { useFdpStorage } from "../../context/fdp.context";
 import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
+import { checkMinBalance } from "../../services/account.service";
 
 enum Steps {
   UsernamePassword,
@@ -107,6 +108,30 @@ const Register = () => {
     });
   };
 
+  const onMnemonicChecking = async () => {
+    try {
+      fdpClient.account.setAccountFromMnemonic(data.mnemonic);
+
+      const account = fdpClient.account.wallet?.address as string;
+
+      const canProceed = await checkMinBalance(account);
+
+      setData({
+        ...data,
+        account,
+      });
+
+      if (!canProceed) {
+        setStep(Steps.WaitingPayment);
+        return;
+      }
+
+      registerUser();
+    } catch (error) {
+      onError(error);
+    }
+  };
+
   const onPaymentConfirmed = (balance: string) => {
     setStep(Steps.Loading);
     setData({
@@ -130,6 +155,14 @@ const Register = () => {
       }
 
       fdpClient.account.setAccountFromMnemonic(mnemonic);
+
+      const canProceed = await checkMinBalance(
+        fdpClient.account.wallet?.address as string
+      );
+
+      if (!canProceed) {
+        throw new Error("Insufficient funds");
+      }
 
       await fdpClient.account.register(username, password);
 
@@ -185,8 +218,9 @@ const Register = () => {
   useEffect(() => {
     if (data.mnemonic && step === Steps.EnterMnemonic) {
       setStep(Steps.Loading);
-      registerUser();
+      onMnemonicChecking();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.mnemonic]);
 
   useEffect(() => {
@@ -220,12 +254,12 @@ const Register = () => {
         </Typography>
       )} */}
 
-      <Title>{intl.get('REGISTER_TITLE')}</Title>
+      <Title>{intl.get("REGISTER_TITLE")}</Title>
       <Typography
         variant="body1"
         align="center"
         sx={{
-          marginTop: '20px',
+          marginTop: "20px",
         }}
       >
         {getStepInstructionMessage(step)}
@@ -233,7 +267,7 @@ const Register = () => {
       {step === Steps.UsernamePassword && (
         <>
           <UsernamePassword onSubmit={onUsernamePasswordSubmit} />
-          <Link to={RouteCodes.migrate}>{intl.get('MIGRATION_LINK')}</Link>
+          <Link to={RouteCodes.migrate}>{intl.get("MIGRATION_LINK")}</Link>
         </>
       )}
       {step === Steps.ChooseMethod && (
@@ -270,21 +304,21 @@ const Register = () => {
       )}
       {step === Steps.Loading && (
         <LoaderWrapperDiv>
-          <CircularProgress sx={{ margin: 'auto' }} />
+          <CircularProgress sx={{ margin: "auto" }} />
         </LoaderWrapperDiv>
       )}
       {step === Steps.Error && (
-        <LoaderWrapperDiv sx={{ flexDirection: 'column' }}>
+        <LoaderWrapperDiv sx={{ flexDirection: "column" }}>
           <ErrorMessage>
-            {intl.get('REGISTRATION_ERROR') + (error || '')}
+            {intl.get("REGISTRATION_ERROR") + (error || "")}
           </ErrorMessage>
-          <Button onClick={reset} sx={{ marginTop: '20px' }}>
-            {intl.get('TRY_AGAIN')}
+          <Button onClick={reset} sx={{ marginTop: "20px" }}>
+            {intl.get("TRY_AGAIN")}
           </Button>
         </LoaderWrapperDiv>
       )}
     </Wrapper>
-  )
+  );
 };
 
 export default Register;

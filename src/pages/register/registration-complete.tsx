@@ -74,7 +74,11 @@ const RegistrationComplete = ({
         }}
       >
         {intl.get("HOW_TO_USE_ACCOUNT_1")}
-        <a href={process.env.REACT_APP_FAIRDRIVE_URL} target="_blank">
+        <a
+          href={process.env.REACT_APP_FAIRDRIVE_URL}
+          target="_blank"
+          rel="noreferrer"
+        >
           Fairdrive
         </a>
         {intl.get("HOW_TO_USE_ACCOUNT_2")}
