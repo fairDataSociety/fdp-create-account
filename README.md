@@ -78,3 +78,6 @@ To fund account from fdp-play
 ```bash
  node ./scripts/fund-new-account.js <account_address> <amount>
 ```
+
+### Import account with mnemonic
+
