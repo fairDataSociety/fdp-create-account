@@ -1,6 +1,6 @@
 import { ENS } from "@fairdatasociety/fdp-contracts";
 import { Alchemy, Network } from "alchemy-sdk";
-import { BigNumber, providers, Wallet } from "ethers";
+import { BigNumber, providers, utils, Wallet } from "ethers";
 import { MIN_BALANCE } from "../constants/constants";
 import { Account } from "../model/general.types";
 import { RegisterResponse } from "../model/internal-messages.model";
@@ -55,5 +55,9 @@ export async function estimateGas(
     alchemy.core.getGasPrice(),
   ]);
 
-  return price.mul(BigNumber.from(amount));
+  const gasPriceInEth = Number(
+    utils.formatEther(price.mul(BigNumber.from(amount)))
+  );
+
+  return utils.parseEther(String(Math.ceil(gasPriceInEth * 1000) / 1000));
 }
