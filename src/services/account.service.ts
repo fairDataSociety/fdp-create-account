@@ -50,6 +50,10 @@ export async function estimateGas(
   account: string,
   publicKey: string
 ): Promise<BigNumber> {
+  if (process.env.REACT_APP_ENVIRONMENT === "LOCALHOST") {
+    return MIN_BALANCE;
+  }
+
   const [amount, price] = await Promise.all([
     ens.registerUsernameEstimateGas(username, account, publicKey),
     alchemy.core.getGasPrice(),
