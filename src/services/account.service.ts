@@ -1,4 +1,4 @@
-import { ENS } from "@fairdatasociety/fdp-contracts";
+import { ENS } from "@fairdatasociety/fdp-contracts-js";
 import { Alchemy, Network } from "alchemy-sdk";
 import { BigNumber, providers, utils, Wallet } from "ethers";
 import { MIN_BALANCE } from "../constants/constants";
@@ -54,14 +54,20 @@ export async function estimateGas(
     return MIN_BALANCE;
   }
 
-  const [amount, price] = await Promise.all([
-    ens.registerUsernameEstimateGas(username, account, publicKey),
-    alchemy.core.getGasPrice(),
-  ]);
+  try {
+    const [amount, price] = await Promise.all([
+      ens.registerUsernameEstimateGas(username, account, publicKey),
+      alchemy.core.getGasPrice(),
+    ]);
 
-  const gasPriceInEth = Number(
-    utils.formatEther(price.mul(BigNumber.from(amount)))
-  );
+    const gasPriceInEth = Number(
+      utils.formatEther(price.mul(BigNumber.from(amount)))
+    );
 
-  return utils.parseEther(String(Math.ceil(gasPriceInEth * 1000) / 1000));
+    return utils.parseEther(String(Math.ceil(gasPriceInEth * 1000) / 1000));
+  } catch (error) {
+    console.error(error);
+
+    return MIN_BALANCE;
+  }
 }

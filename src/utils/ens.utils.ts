@@ -1,15 +1,15 @@
 import {
   Environments,
-  getEnsEnvironmentConfig,
-} from "@fairdatasociety/fdp-contracts";
+  getEnvironmentConfig,
+} from "@fairdatasociety/fdp-contracts-js";
 
 function getEnvironment() {
   const environment = process.env.REACT_APP_ENVIRONMENT;
 
   if (environment === "LOCALHOST") {
-    return getEnsEnvironmentConfig(Environments.LOCALHOST);
+    return getEnvironmentConfig(Environments.LOCALHOST);
   } else if (environment === "GOERLI") {
-    return getEnsEnvironmentConfig(Environments.GOERLI);
+    return getEnvironmentConfig(Environments.GOERLI);
   }
 
   return undefined;
