@@ -1,6 +1,7 @@
-import { FdpContracts } from "@fairdatasociety/fdp-storage";
-// TODO temporary because the fdp-storage is not exporting these values
-const { Environments, getEnvironmentConfig } = FdpContracts || {};
+import {
+  Environments,
+  getEnvironmentConfig,
+} from "@fairdatasociety/fdp-contracts-js";
 
 function getEnvironment() {
   const environment = process.env.REACT_APP_ENVIRONMENT;
@@ -56,5 +57,5 @@ export function getEnsConfig(): any {
 
 export function isPasswordValid(password: string): boolean {
   // TODO check if password contains lowercase and uppercase letters
-  return typeof password === 'string' && password.length >= 12
+  return typeof password === "string" && password.length >= 12;
 }

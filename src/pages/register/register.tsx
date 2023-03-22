@@ -17,7 +17,9 @@ import { useFdpStorage } from "../../context/fdp.context";
 import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
-import { checkMinBalance } from "../../services/account.service";
+import { checkMinBalance, estimateGas } from "../../services/account.service";
+import { BigNumber, utils } from "ethers";
+import { MIN_BALANCE } from "../../constants/constants";
 
 enum Steps {
   UsernamePassword,
@@ -55,8 +57,21 @@ const Register = () => {
   const { fdpClient } = useFdpStorage();
 
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
+  const [minBalance, setMinBalance] = useState<BigNumber | undefined>(
+    undefined
+  );
   const [data, setData] = useState<RegistrationState>(emptyState);
   const [error, setError] = useState<string | null>(null);
+
+  const getMinBalance = async () => {
+    const wallet = fdpClient.account.wallet;
+    const account = wallet?.address as string;
+    const publicKey = fdpClient.account.publicKey as string;
+
+    const price = await estimateGas(data.username, account, publicKey);
+
+    setMinBalance(price);
+  };
 
   const onUsernamePasswordSubmit = (registerData: RegisterData) => {
     setData({
@@ -86,6 +101,7 @@ const Register = () => {
         ...data,
         ...response,
       });
+      getMinBalance();
       setStep(Steps.Mnemonic);
     } catch (error) {
       console.error(error);
@@ -112,9 +128,12 @@ const Register = () => {
     try {
       fdpClient.account.setAccountFromMnemonic(data.mnemonic);
 
-      const account = fdpClient.account.wallet?.address as string;
+      const wallet = fdpClient.account.wallet;
+      const account = wallet?.address as string;
 
-      const canProceed = await checkMinBalance(account);
+      await getMinBalance();
+
+      const canProceed = await checkMinBalance(account, minBalance);
 
       setData({
         ...data,
@@ -193,7 +212,9 @@ const Register = () => {
         return (
           intl.get(message) +
           " " +
-          intl.get("WAITING_FOR_PAYMENT_AMOUNT_GOERLI")
+          intl.get("WAITING_FOR_PAYMENT_AMOUNT_GOERLI", {
+            price: utils.formatEther(minBalance || MIN_BALANCE),
+          })
         );
       }
     } else if (step === Steps.Complete) {
@@ -291,6 +312,7 @@ const Register = () => {
       {step === Steps.WaitingPayment && (
         <WaitingPayment
           account={data.account}
+          minBalance={minBalance}
           onPaymentDetected={onPaymentConfirmed}
           onError={onError}
         />

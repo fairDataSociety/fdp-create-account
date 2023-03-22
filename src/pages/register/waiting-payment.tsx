@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import intl from "react-intl-universal";
 import { styled } from "@mui/system";
 import { CircularProgress, Typography, Button } from "@mui/material";
@@ -16,6 +16,7 @@ import { MIN_BALANCE } from "../../constants/constants";
 
 export interface WaitingPaymentProps {
   account: Account;
+  minBalance?: BigNumber;
   onPaymentDetected: (balance: string) => void;
   onError: (error: unknown) => void;
 }
@@ -30,6 +31,7 @@ const networkInfo = process.env.REACT_APP_BLOCKCHAIN_INFO;
 
 const WaitingPayment = ({
   account,
+  minBalance,
   onPaymentDetected,
   onError,
 }: WaitingPaymentProps) => {
@@ -51,7 +53,7 @@ const WaitingPayment = ({
     try {
       const balance = await getAccountBalance(account); // in wei
 
-      if (balance.gte(MIN_BALANCE)) {
+      if (balance.gte(minBalance || MIN_BALANCE)) {
         closeTimer();
         onPaymentDetected(`${utils.formatEther(balance)} ETH`);
       }
