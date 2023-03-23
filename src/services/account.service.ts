@@ -56,7 +56,15 @@ export async function estimateGas(
 
   try {
     const [amount, price] = await Promise.all([
-      ens.registerUsernameEstimateGas(username, account, publicKey),
+      ens.registerUsernameEstimateGas(
+        username,
+        account,
+        publicKey,
+        86400,
+        new providers.JsonRpcProvider(
+          `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`
+        )
+      ),
       alchemy.core.getGasPrice(),
     ]);
 

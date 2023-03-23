@@ -18,6 +18,8 @@ To configure the application, create an `.env` file in the root directory. Set t
 - **REACT_APP_SUBDOMAIN_REGISTRAR_ADDRESS** - Subdomain registrar contract address
 - **REACT_APP_PUBLIC_RESOLVER_ADDRESS** - Public Resolver contract address
 - **REACT_APP_WEB3_MODAL_PROJECT_ID** - Web3Modal Project ID
+- **REACT_APP_ALCHEMY_API_KEY** - Alchemy API key (https://www.alchemy.com/)
+- **REACT_APP_INFURA_KEY** - Infura key (https://app.infura.io/dashboard)
 
 If the latest `fdp-contract` image is used as RPC provider, then contract addresses can be omitted.
 
@@ -80,4 +82,3 @@ To fund account from fdp-play
 ```
 
 ### Import account with mnemonic
-

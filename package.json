@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
-    "@fairdatasociety/fdp-contracts-js": "^2.0.2",
+    "@fairdatasociety/fdp-contracts-js": "^2.2.0",
     "@fairdatasociety/fdp-storage": "github:fairDataSociety/fdp-storage#fix/bee-js-new-762",
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.7",
