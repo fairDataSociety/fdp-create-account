@@ -93,7 +93,7 @@ jobs:
         uses: ethersphere/swarm-actions/upload-dir@latest
         with:
           bee-url: ${{ env.SWARM_URL }}
-          dir: ./out
+          dir: ./build
           index-document: index.html
           timeout: 200000
       - name: update feed
