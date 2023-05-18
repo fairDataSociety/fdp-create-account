@@ -5,14 +5,14 @@ import { styled } from "@mui/system";
 import { CircularProgress, Typography, Button } from "@mui/material";
 import { Account } from "../../model/general.types";
 import ClipboardButton from "../../components/clipboard-button/clipboard-button.component";
-import { getAccountBalance } from "../../services/account.service";
 import {
-  useAccount,
+  useAccount as useWagmiAccount,
   usePrepareSendTransaction,
   useSendTransaction,
   useWaitForTransaction,
 } from "wagmi";
 import { MIN_BALANCE } from "../../constants/constants";
+import { useAccount } from "../../context/account.context";
 
 export interface WaitingPaymentProps {
   account: Account;
@@ -35,7 +35,8 @@ const WaitingPayment = ({
   onPaymentDetected,
   onError,
 }: WaitingPaymentProps) => {
-  const { isConnected } = useAccount();
+  const { isConnected } = useWagmiAccount();
+  const { getAccountBalance } = useAccount();
   const { config } = usePrepareSendTransaction({
     request: {
       to: account,
