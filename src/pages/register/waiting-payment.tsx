@@ -1,21 +1,22 @@
 import { useEffect, useRef } from "react";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import intl from "react-intl-universal";
 import { styled } from "@mui/system";
 import { CircularProgress, Typography, Button } from "@mui/material";
 import { Account } from "../../model/general.types";
 import ClipboardButton from "../../components/clipboard-button/clipboard-button.component";
-import { getAccountBalance } from "../../services/account.service";
 import {
-  useAccount,
+  useAccount as useWagmiAccount,
   usePrepareSendTransaction,
   useSendTransaction,
   useWaitForTransaction,
 } from "wagmi";
 import { MIN_BALANCE } from "../../constants/constants";
+import { useAccount } from "../../context/account.context";
 
 export interface WaitingPaymentProps {
   account: Account;
+  minBalance?: BigNumber;
   onPaymentDetected: (balance: string) => void;
   onError: (error: unknown) => void;
 }
@@ -30,10 +31,12 @@ const networkInfo = process.env.REACT_APP_BLOCKCHAIN_INFO;
 
 const WaitingPayment = ({
   account,
+  minBalance,
   onPaymentDetected,
   onError,
 }: WaitingPaymentProps) => {
-  const { isConnected } = useAccount();
+  const { isConnected } = useWagmiAccount();
+  const { getAccountBalance } = useAccount();
   const { config } = usePrepareSendTransaction({
     request: {
       to: account,
@@ -51,7 +54,7 @@ const WaitingPayment = ({
     try {
       const balance = await getAccountBalance(account); // in wei
 
-      if (balance.gte(MIN_BALANCE)) {
+      if (balance.gte(minBalance || MIN_BALANCE)) {
         closeTimer();
         onPaymentDetected(`${utils.formatEther(balance)} ETH`);
       }

@@ -17,7 +17,9 @@ import { useFdpStorage } from "../../context/fdp.context";
 import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
-import { checkMinBalance } from "../../services/account.service";
+import { BigNumber, utils } from "ethers";
+import { MIN_BALANCE } from "../../constants/constants";
+import { useAccount } from "../../context/account.context";
 
 enum Steps {
   UsernamePassword,
@@ -53,10 +55,22 @@ const emptyState: RegistrationState = {
 
 const Register = () => {
   const { fdpClient } = useFdpStorage();
+  const { estimateGas, checkMinBalance } = useAccount();
 
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
+  const [minBalance, setMinBalance] = useState<BigNumber>(MIN_BALANCE);
   const [data, setData] = useState<RegistrationState>(emptyState);
   const [error, setError] = useState<string | null>(null);
+
+  const getMinBalance = async () => {
+    const wallet = fdpClient.account.wallet;
+    const account = wallet?.address as string;
+    const publicKey = fdpClient.account.publicKey as string;
+
+    const price = await estimateGas(data.username, account, publicKey);
+
+    setMinBalance(price);
+  };
 
   const onUsernamePasswordSubmit = (registerData: RegisterData) => {
     setData({
@@ -86,6 +100,7 @@ const Register = () => {
         ...data,
         ...response,
       });
+      getMinBalance();
       setStep(Steps.Mnemonic);
     } catch (error) {
       console.error(error);
@@ -112,9 +127,12 @@ const Register = () => {
     try {
       fdpClient.account.setAccountFromMnemonic(data.mnemonic);
 
-      const account = fdpClient.account.wallet?.address as string;
+      const wallet = fdpClient.account.wallet;
+      const account = wallet?.address as string;
 
-      const canProceed = await checkMinBalance(account);
+      await getMinBalance();
+
+      const canProceed = await checkMinBalance(account, minBalance);
 
       setData({
         ...data,
@@ -157,7 +175,8 @@ const Register = () => {
       fdpClient.account.setAccountFromMnemonic(mnemonic);
 
       const canProceed = await checkMinBalance(
-        fdpClient.account.wallet?.address as string
+        fdpClient.account.wallet?.address as string,
+        minBalance
       );
 
       if (!canProceed) {
@@ -189,13 +208,13 @@ const Register = () => {
       message = "EXISTING_ACCOUNT_INSTRUCTIONS";
     } else if (step === Steps.WaitingPayment) {
       message = "WAITING_FOR_PAYMENT_INSTRUCTIONS";
-      if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
-        return (
-          intl.get(message) +
-          " " +
-          intl.get("WAITING_FOR_PAYMENT_AMOUNT_GOERLI")
-        );
-      }
+      return (
+        intl.get(message) +
+        " " +
+        intl.get("WAITING_FOR_PAYMENT_AMOUNT", {
+          price: utils.formatEther(minBalance || MIN_BALANCE),
+        })
+      );
     } else if (step === Steps.Complete) {
       message = "REGISTRATION_COMPLETE";
     }
@@ -241,7 +260,7 @@ const Register = () => {
             fontSize: '14px',
           }}
         >
-          {intl.get('GOERLI_INFO')}
+          {intl.get('TESTNET_INFO')}
           <div>
             <div>REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}</div>
             <div>REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}</div>
@@ -291,6 +310,7 @@ const Register = () => {
       {step === Steps.WaitingPayment && (
         <WaitingPayment
           account={data.account}
+          minBalance={minBalance}
           onPaymentDetected={onPaymentConfirmed}
           onError={onError}
         />

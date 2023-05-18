@@ -26,7 +26,7 @@
   "OK": "OK",
   "REGISTRATION_ERROR": "Error while registering your account: ",
   "WAITING_FOR_PAYMENT_INSTRUCTIONS": "To complete registration you need to provide funds to your newly created address. Registration will continue afterwards.",
-  "WAITING_FOR_PAYMENT_AMOUNT_GOERLI": "Suggested amounts for Goerli testnet are 0.01 gEth.",
+  "WAITING_FOR_PAYMENT_AMOUNT": "Suggested amounts are {price} Eth.",
   "REGISTRATION_COMPLETE": "Congratulations, you have created a Fair Data Society account.",
   "TRY_AGAIN": "Try Again",
   "COPY_TO_CLIPBOARD_MESSAGE": "Text copied to clipboard",
@@ -48,7 +48,7 @@
   "MIGRATION_ERROR_NO_FUNDS": "There is no sufficient funds for migration. You should fund your address:",
   "MIGRATION_ERROR": "Migration failed with the error: ",
   "DISCLAIMER": "Disclaimer: Account integrity persistence and security are not assured. Expect that funds used for account might be lost, as well as any data the account uses.",
-  "GOERLI_INFO": "Running on Goerli testnet - you are creating an account on the testnet.",
+  "TESTNET_INFO": "Running on testnet - you are creating an account on the testnet.",
   "HOW_TO_USE_ACCOUNT_1": "You can use your account to login into ",
   "HOW_TO_USE_ACCOUNT_2": " and other dApps!"
 }
