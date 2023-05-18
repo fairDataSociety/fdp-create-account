@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import intl from "react-intl-universal";
 import { useForm } from "react-hook-form";
-import { Button, TextField } from "@mui/material";
+import { Button, MenuItem, Select, TextField } from "@mui/material";
 import Form from "../../components/form/form.component";
 import { RegisterData } from "../../model/internal-messages.model";
 import { useFdpStorage } from "../../context/fdp.context";
 import { isPasswordValid } from "../../utils/ens.utils";
 import Disclaimer from "../../components/disclaimer/disclaimer.component";
+import { useNetworks } from "../../context/network.context";
+import { Network } from "../../model/network.model";
 
 export interface UsernamePasswordProps {
   onSubmit: (data: RegisterData) => void;
@@ -15,7 +17,7 @@ export interface UsernamePasswordProps {
 interface FormFields {
   username: string;
   password: string;
-  networkId: string;
+  networkLabel: string;
 }
 
 const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
@@ -24,7 +26,8 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormFields>();
-  const { fdpClient } = useFdpStorage();
+  const { updateFdpClient } = useFdpStorage();
+  const { networks, currentNetwork } = useNetworks();
   const [loading, setLoading] = useState<boolean>(false);
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -40,7 +43,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
   const onSubmitInternal = async ({
     username,
     password,
-    networkId,
+    networkLabel,
   }: FormFields) => {
     try {
       const passError = validatePassword(password);
@@ -53,9 +56,12 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
       setUsernameError(null);
       setPasswordError(null);
 
-      const usernameAvailable = await fdpClient.account.ens.isUsernameAvailable(
-        username
+      let currentFdpClient = updateFdpClient(
+        networks.find(({ label }) => label === networkLabel) as Network
       );
+
+      const usernameAvailable =
+        await currentFdpClient.account.ens.isUsernameAvailable(username);
 
       if (!usernameAvailable) {
         return setUsernameError(intl.get("USERNAME_NOT_AVAILABLE"));
@@ -122,6 +128,23 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         }
         data-testid="password"
       />
+      <Select
+        defaultValue={currentNetwork.label}
+        variant="outlined"
+        fullWidth
+        disabled={loading}
+        data-testid="network"
+        {...register("networkLabel", { required: true })}
+        sx={{
+          marginTop: "20px",
+        }}
+      >
+        {networks.map(({ label }) => (
+          <MenuItem key={label} value={label}>
+            {label}
+          </MenuItem>
+        ))}
+      </Select>
       <Button
         color="primary"
         variant="contained"

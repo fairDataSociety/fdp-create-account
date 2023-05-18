@@ -17,9 +17,9 @@ import { useFdpStorage } from "../../context/fdp.context";
 import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
-import { checkMinBalance, estimateGas } from "../../services/account.service";
 import { BigNumber, utils } from "ethers";
 import { MIN_BALANCE } from "../../constants/constants";
+import { useAccount } from "../../context/account.context";
 
 enum Steps {
   UsernamePassword,
@@ -55,11 +55,10 @@ const emptyState: RegistrationState = {
 
 const Register = () => {
   const { fdpClient } = useFdpStorage();
+  const { estimateGas, checkMinBalance } = useAccount();
 
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
-  const [minBalance, setMinBalance] = useState<BigNumber | undefined>(
-    undefined
-  );
+  const [minBalance, setMinBalance] = useState<BigNumber>(MIN_BALANCE);
   const [data, setData] = useState<RegistrationState>(emptyState);
   const [error, setError] = useState<string | null>(null);
 
@@ -176,7 +175,8 @@ const Register = () => {
       fdpClient.account.setAccountFromMnemonic(mnemonic);
 
       const canProceed = await checkMinBalance(
-        fdpClient.account.wallet?.address as string
+        fdpClient.account.wallet?.address as string,
+        minBalance
       );
 
       if (!canProceed) {
@@ -208,15 +208,13 @@ const Register = () => {
       message = "EXISTING_ACCOUNT_INSTRUCTIONS";
     } else if (step === Steps.WaitingPayment) {
       message = "WAITING_FOR_PAYMENT_INSTRUCTIONS";
-      if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
-        return (
-          intl.get(message) +
-          " " +
-          intl.get("WAITING_FOR_PAYMENT_AMOUNT_GOERLI", {
-            price: utils.formatEther(minBalance || MIN_BALANCE),
-          })
-        );
-      }
+      return (
+        intl.get(message) +
+        " " +
+        intl.get("WAITING_FOR_PAYMENT_AMOUNT", {
+          price: utils.formatEther(minBalance || MIN_BALANCE),
+        })
+      );
     } else if (step === Steps.Complete) {
       message = "REGISTRATION_COMPLETE";
     }
@@ -262,7 +260,7 @@ const Register = () => {
             fontSize: '14px',
           }}
         >
-          {intl.get('GOERLI_INFO')}
+          {intl.get('TESTNET_INFO')}
           <div>
             <div>REACT_APP_BEE_URL: {process.env.REACT_APP_BEE_URL}</div>
             <div>REACT_APP_FAIROS_URL: {process.env.REACT_APP_FAIROS_URL}</div>
