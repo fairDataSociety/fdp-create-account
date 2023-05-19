@@ -5,15 +5,13 @@ import {
   getEnsEnvironmentConfig,
   Environments,
 } from "@fairdatasociety/fdp-contracts-js";
+import { utils } from "ethers";
 
 export const networks: Network[] = [
-  {
-    label: "Görli",
-    config: getEnsEnvironmentConfig(Environments.GOERLI),
-  },
   // TODO Replace with default ENS config when becomes available
   {
     label: "Sepolia",
+    minBalance: utils.parseUnits("0.0015", "ether"),
     config: {
       rpcUrl: "https://rpc.sepolia.org/",
       contractAddresses: {
@@ -24,11 +22,17 @@ export const networks: Network[] = [
       performChecks: true,
     },
   },
+  {
+    label: "Görli",
+    config: getEnsEnvironmentConfig(Environments.GOERLI),
+    minBalance: utils.parseUnits("0.05", "ether"),
+  },
 ];
 
 if (process.env.REACT_APP_ENVIRONMENT === "LOCALHOST") {
   networks.unshift({
     label: "FDP Play",
+    minBalance: utils.parseUnits("0.01", "ether"),
     config: getEnsEnvironmentConfig(Environments.LOCALHOST),
   });
 }

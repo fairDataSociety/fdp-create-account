@@ -1,5 +1,8 @@
+import { BigNumber } from "ethers";
+
 export interface Network {
   label: string;
+  minBalance: BigNumber;
   config: {
     rpcUrl: string;
     contractAddresses: {
