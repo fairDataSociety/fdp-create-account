@@ -10,7 +10,7 @@ import {
 import { RegisterResponse } from "../model/internal-messages.model";
 import { Account } from "../model/general.types";
 import { useNetworks } from "./network.context";
-import { FDS_DOMAIN, MIN_BALANCE } from "../constants/constants";
+import { FDS_DOMAIN } from "../constants/constants";
 import { Network } from "../model/network.model";
 
 function getAlchemySettings(network: Network): AlchemySettings | null {
@@ -39,7 +39,8 @@ export interface AccountContext {
   estimateGas: (
     username: string,
     account: string,
-    publicKey: string
+    publicKey: string,
+    defaultMinBalance: BigNumber
   ) => Promise<BigNumber>;
 }
 
@@ -96,7 +97,7 @@ export const AccountProvider = ({ children }: AccountContextProps) => {
 
   const checkMinBalance = async (
     account: Account,
-    minBalance = MIN_BALANCE
+    minBalance: BigNumber
   ): Promise<boolean> => {
     const balance = await getAccountBalance(account);
 
@@ -106,7 +107,8 @@ export const AccountProvider = ({ children }: AccountContextProps) => {
   const estimateGas = async (
     username: string,
     account: string,
-    publicKey: string
+    publicKey: string,
+    defaultMinBalance: BigNumber
   ): Promise<BigNumber> => {
     try {
       const [amount, price] = await Promise.all([
@@ -124,7 +126,7 @@ export const AccountProvider = ({ children }: AccountContextProps) => {
     } catch (error) {
       console.error(error);
 
-      return MIN_BALANCE;
+      return defaultMinBalance;
     }
   };
 

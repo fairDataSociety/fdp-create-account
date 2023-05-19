@@ -56,9 +56,11 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
       setUsernameError(null);
       setPasswordError(null);
 
-      let currentFdpClient = updateFdpClient(
-        networks.find(({ label }) => label === networkLabel) as Network
-      );
+      const network = networks.find(
+        ({ label }) => label === networkLabel
+      ) as Network;
+
+      let currentFdpClient = updateFdpClient(network);
 
       const usernameAvailable =
         await currentFdpClient.account.ens.isUsernameAvailable(username);
@@ -71,6 +73,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         username,
         password,
         privateKey: "",
+        network,
       });
     } catch (error) {
       const { message } = error as Error;

@@ -18,8 +18,8 @@ import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
 import { BigNumber, utils } from "ethers";
-import { MIN_BALANCE } from "../../constants/constants";
 import { useAccount } from "../../context/account.context";
+import { useNetworks } from "../../context/network.context";
 
 enum Steps {
   UsernamePassword,
@@ -39,7 +39,7 @@ const LoaderWrapperDiv = styled("div")({
   display: "flex",
 });
 
-interface RegistrationState extends RegisterData {
+interface RegistrationState extends Omit<RegisterData, "network"> {
   account: Account;
   mnemonic: Mnemonic;
   balance: string | null;
@@ -56,9 +56,12 @@ const emptyState: RegistrationState = {
 const Register = () => {
   const { fdpClient } = useFdpStorage();
   const { estimateGas, checkMinBalance } = useAccount();
+  const { currentNetwork } = useNetworks();
 
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
-  const [minBalance, setMinBalance] = useState<BigNumber>(MIN_BALANCE);
+  const [minBalance, setMinBalance] = useState<BigNumber>(
+    currentNetwork.minBalance
+  );
   const [data, setData] = useState<RegistrationState>(emptyState);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,7 +70,12 @@ const Register = () => {
     const account = wallet?.address as string;
     const publicKey = fdpClient.account.publicKey as string;
 
-    const price = await estimateGas(data.username, account, publicKey);
+    const price = await estimateGas(
+      data.username,
+      account,
+      publicKey,
+      minBalance
+    );
 
     setMinBalance(price);
   };
@@ -77,6 +85,7 @@ const Register = () => {
       ...data,
       ...registerData,
     });
+    setMinBalance(registerData.network.minBalance);
     setStep(Steps.ChooseMethod);
   };
 
@@ -212,7 +221,7 @@ const Register = () => {
         intl.get(message) +
         " " +
         intl.get("WAITING_FOR_PAYMENT_AMOUNT", {
-          price: utils.formatEther(minBalance || MIN_BALANCE),
+          price: utils.formatEther(minBalance),
         })
       );
     } else if (step === Steps.Complete) {
