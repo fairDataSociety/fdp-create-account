@@ -22,6 +22,8 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
       - name: set vars per branch
+        env:
+          REACT_APP_ALCHEMY_API_KEY: "${{ secrets.REACT_APP_ALCHEMY_API_KEY }}"
         id: vars
         run: |
           if [ "$GITHUB_REF_NAME" == 'main' ]; then
@@ -31,7 +33,7 @@ jobs:
               echo "REACT_APP_BLOCKCHAIN_INFO=GOERLI" >> "$GITHUB_ENV"
               echo "REACT_APP_ENVIRONMENT=GOERLI" >> "$GITHUB_ENV"
               echo "REACT_APP_WEB3_MODAL_PROJECT_ID=${{ secrets.REACT_APP_WEB3_MODAL_PROJECT_ID }}" >> "$GITHUB_ENV"
-              echo "REACT_APP_ALCHEMY_API_KEY=${{ secrets.REACT_APP_ALCHEMY_API_KEY }}" >> "$GITHUB_ENV"
+              echo "REACT_APP_ALCHEMY_API_KEY=$REACT_APP_ALCHEMY_API_KEY" >> "$GITHUB_ENV"
               echo "PURGE_URL=https://app.fairdrive.fairdatasociety.org" >> "$GITHUB_ENV"
               echo "SWARM_URL=https://gateway.fairdatasociety.org/proxy/" >> "$GITHUB_ENV"
               echo "SIGNER=SIGNER_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
@@ -43,7 +45,7 @@ jobs:
               echo "REACT_APP_BLOCKCHAIN_INFO=GOERLI" >> "$GITHUB_ENV"
               echo "REACT_APP_ENVIRONMENT=GOERLI" >> "$GITHUB_ENV"
               echo "REACT_APP_WEB3_MODAL_PROJECT_ID=${{ secrets.REACT_APP_WEB3_MODAL_PROJECT_ID }}" >> "$GITHUB_ENV"
-              echo "REACT_APP_ALCHEMY_API_KEY=${{ secrets.REACT_APP_ALCHEMY_API_KEY }}" >> "$GITHUB_ENV"
+              echo "REACT_APP_ALCHEMY_API_KEY=$REACT_APP_ALCHEMY_API_KEY" >> "$GITHUB_ENV"
               echo "PURGE_URL=https://app.fairdrive.dev.fairdatasociety.org" >> "$GITHUB_ENV"
               echo "SWARM_URL=https://gateway.dev.fairdatasociety.org/proxy/" >> "$GITHUB_ENV"
               echo "SIGNER=SIGNER_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
@@ -55,7 +57,7 @@ jobs:
               echo "REACT_APP_BLOCKCHAIN_INFO=GOERLI" >> "$GITHUB_ENV"
               echo "REACT_APP_ENVIRONMENT=GOERLI" >> "$GITHUB_ENV"
               echo "REACT_APP_WEB3_MODAL_PROJECT_ID=${{ secrets.REACT_APP_WEB3_MODAL_PROJECT_ID }}" >> "$GITHUB_ENV"
-              echo "REACT_APP_ALCHEMY_API_KEY=${{ secrets.REACT_APP_ALCHEMY_API_KEY }}" >> "$GITHUB_ENV"
+              echo "REACT_APP_ALCHEMY_API_KEY=$REACT_APP_ALCHEMY_API_KEY" >> "$GITHUB_ENV"
               echo "PURGE_URL=https://fairos.staging.fairdatasociety.org" >> "$GITHUB_ENV"
               echo "SWARM_URL=https://gateway.fairdatasociety.org/proxy/" >> "$GITHUB_ENV"
               echo "SIGNER=SIGNER_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
