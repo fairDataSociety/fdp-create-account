@@ -80,4 +80,3 @@ To fund account from fdp-play
 ```
 
 ### Import account with mnemonic
-
