@@ -57,7 +57,7 @@ jobs:
               echo "REACT_APP_WEB3_MODAL_PROJECT_ID=${{ secrets.REACT_APP_WEB3_MODAL_PROJECT_ID }}" >> "$GITHUB_ENV"
               echo "REACT_APP_ALCHEMY_API_KEY=${{ secrets.REACT_APP_ALCHEMY_API_KEY }}" >> "$GITHUB_ENV"
               echo "PURGE_URL=https://fairos.staging.fairdatasociety.org" >> "$GITHUB_ENV"
-              echo "SWARM_URL=https://gateway.dev.fairdatasociety.org/proxy/" >> "$GITHUB_ENV"
+              echo "SWARM_URL=https://gateway.fairdatasociety.org/proxy/" >> "$GITHUB_ENV"
               echo "SIGNER=SIGNER_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
               echo "DEPLOYMENT=.staging." >> "$GITHUB_ENV"
           fi
@@ -118,6 +118,6 @@ jobs:
           echo 'Feed Manifest: ${{ steps.swarm-feed.outputs.manifest }}'
       - name: purge cache
         env:
-          TOKEN: '${{ secrets.purge_token }}'
+          TOKEN: "${{ secrets.purge_token }}"
         run: |
           curl -s ${{ env.PURGE_URL }}/deploy/purge?token=${{ secrets.purge_token }} -H "site: create${{ env.DEPLOYMENT }}fairdatasociety.org" -H "uri: "
