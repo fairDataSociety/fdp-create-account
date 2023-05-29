@@ -1,21 +1,22 @@
 import { useEffect, useRef } from "react";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import intl from "react-intl-universal";
 import { styled } from "@mui/system";
 import { CircularProgress, Typography, Button } from "@mui/material";
 import { Account } from "../../model/general.types";
 import ClipboardButton from "../../components/clipboard-button/clipboard-button.component";
-import { getAccountBalance } from "../../services/account.service";
 import {
-  useAccount,
+  useAccount as useWagmiAccount,
   usePrepareSendTransaction,
   useSendTransaction,
   useWaitForTransaction,
 } from "wagmi";
-import { MIN_BALANCE } from "../../constants/constants";
+import { useAccount } from "../../context/account.context";
+import { useNetworks } from "../../context/network.context";
 
 export interface WaitingPaymentProps {
   account: Account;
+  minBalance: BigNumber;
   onPaymentDetected: (balance: string) => void;
   onError: (error: unknown) => void;
 }
@@ -26,18 +27,19 @@ const ContainerDiv = styled("div")({
   margin: "20px auto 0 auto",
 });
 
-const networkInfo = process.env.REACT_APP_BLOCKCHAIN_INFO;
-
 const WaitingPayment = ({
   account,
+  minBalance,
   onPaymentDetected,
   onError,
 }: WaitingPaymentProps) => {
-  const { isConnected } = useAccount();
+  const { isConnected } = useWagmiAccount();
+  const { getAccountBalance } = useAccount();
+  const { currentNetwork } = useNetworks();
   const { config } = usePrepareSendTransaction({
     request: {
       to: account,
-      value: MIN_BALANCE,
+      value: minBalance,
     },
   });
   const { sendTransaction, data } = useSendTransaction(config);
@@ -51,7 +53,7 @@ const WaitingPayment = ({
     try {
       const balance = await getAccountBalance(account); // in wei
 
-      if (balance.gte(MIN_BALANCE)) {
+      if (balance.gte(minBalance)) {
         closeTimer();
         onPaymentDetected(`${utils.formatEther(balance)} ETH`);
       }
@@ -82,11 +84,9 @@ const WaitingPayment = ({
 
   return (
     <ContainerDiv>
-      {networkInfo && (
-        <Typography variant="h6" sx={{ margin: "auto" }}>
-          {networkInfo}
-        </Typography>
-      )}
+      <Typography variant="h6" sx={{ margin: "auto" }}>
+        {currentNetwork.label}
+      </Typography>
 
       <Typography variant="h5" sx={{ margin: "auto" }}>
         <span data-testid="account">{account}</span>
@@ -111,7 +111,7 @@ const WaitingPayment = ({
           </Button>
           {isSuccess && (
             <div>
-              Successfully sent {utils.formatEther(MIN_BALANCE)} ether to{" "}
+              Successfully sent {utils.formatEther(minBalance)} ether to{" "}
               {account}
             </div>
           )}

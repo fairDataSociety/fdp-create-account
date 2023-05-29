@@ -1,13 +1,26 @@
-import { createContext, ReactNode, useContext } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { FdpStorage } from "@fairdatasociety/fdp-storage";
-import { getEnsConfig } from "../utils/ens.utils";
-import { GLOBAL_POSTAGE_BATCH_ID } from "../constants/constants";
+import { FDS_DOMAIN, GLOBAL_POSTAGE_BATCH_ID } from "../constants/constants";
+import { Network } from "../model/network.model";
+import { networks, useNetworks } from "./network.context";
+import { useRef } from "react";
 
-const fdpClient = new FdpStorage(
-  process.env.REACT_APP_BEE_URL as string,
-  (process.env.REACT_APP_BATCH_ID || GLOBAL_POSTAGE_BATCH_ID) as any,
-  getEnsConfig()
-);
+function createFdpClient(network: Network): FdpStorage {
+  return new FdpStorage(
+    process.env.REACT_APP_BEE_URL as string,
+    (process.env.REACT_APP_BATCH_ID || GLOBAL_POSTAGE_BATCH_ID) as any,
+    {
+      ensOptions: network.config,
+      ensDomain: FDS_DOMAIN,
+    }
+  );
+}
 
 interface FdpStorageContextProps {
   children: ReactNode;
@@ -15,17 +28,37 @@ interface FdpStorageContextProps {
 
 interface FdpStorageContextI {
   fdpClient: FdpStorage;
+  updateFdpClient: (network: Network) => FdpStorage;
 }
 
 const FdpStorageContext = createContext<FdpStorageContextI>({
-  fdpClient,
+  fdpClient: createFdpClient(networks[0]),
+  updateFdpClient: (network) => createFdpClient(network),
 });
 
-export function FdpStorageProvider(props: FdpStorageContextProps) {
-  const { children } = props;
+export function FdpStorageProvider({ children }: FdpStorageContextProps) {
+  const { currentNetwork, setCurrentNetwork } = useNetworks();
+  const prevNetwork = useRef<Network>();
+  const [fdpClient, setFdpClient] = useState<FdpStorage>(
+    createFdpClient(currentNetwork)
+  );
+  prevNetwork.current = currentNetwork;
+
+  const updateFdpClient = (network: Network) => {
+    setCurrentNetwork(network);
+    const fdpClient = createFdpClient(network);
+    setFdpClient(fdpClient);
+    return fdpClient;
+  };
+
+  useEffect(() => {
+    if (prevNetwork.current !== currentNetwork) {
+      setFdpClient(createFdpClient(currentNetwork));
+    }
+  }, [currentNetwork]);
 
   return (
-    <FdpStorageContext.Provider value={{ fdpClient }}>
+    <FdpStorageContext.Provider value={{ fdpClient, updateFdpClient }}>
       {children}
     </FdpStorageContext.Provider>
   );
