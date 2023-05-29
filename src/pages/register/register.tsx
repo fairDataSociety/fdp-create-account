@@ -77,7 +77,7 @@ const Register = () => {
       minBalance
     );
 
-    setMinBalance(price);
+    setMinBalance(price.mul(BigNumber.from(2)));
   };
 
   const onUsernamePasswordSubmit = (registerData: RegisterData) => {
