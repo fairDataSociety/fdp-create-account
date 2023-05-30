@@ -37,6 +37,10 @@ if (process.env.REACT_APP_ENVIRONMENT === "LOCALHOST") {
   });
 }
 
+export function getMainNetwork(): Network {
+  return networks.find(({ label }) => label === "Sepolia") as Network;
+}
+
 export interface NetworkContext {
   networks: Network[];
   currentNetwork: Network;
