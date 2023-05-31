@@ -176,12 +176,13 @@ const Register = () => {
       const gasPrice = utils.parseUnits("0.0001", "ether");
 
       if (balance.gt(BigNumber.from(gasPrice))) {
-        await sendFunds(
+        const tx = await sendFunds(
           currentNetwork.config.rpcUrl,
           inviteKey as string,
           Wallet.fromMnemonic(data.mnemonic).address,
           balance.sub(gasPrice)
         );
+        await tx.wait();
       }
 
       if (balance.gte(minBalance)) {
@@ -212,7 +213,6 @@ const Register = () => {
   const registerUser = async () => {
     try {
       const { username, password, mnemonic } = data;
-      const userWallet = Wallet.fromMnemonic(mnemonic);
 
       if (!mnemonic) {
         throw new Error("Mnemonic must be set in order to register account");
@@ -231,15 +231,16 @@ const Register = () => {
 
       await fdpClient.account.register(username, password);
 
-      if (inviteKey) {
+      if (inviteKey && process.env.REACT_APP_INVITE_URL) {
         const inviteWallet = new Wallet(inviteKey);
+        const userWallet = new Wallet(fdpClient.account.wallet!.privateKey);
 
-        // await axios.post(process.env.REACT_APP_INVITE_URL as string, {
-        //   invite_address: inviteWallet.address,
-        //   link_address: userWallet.address,
-        //   invite_signature: inviteWallet.signMessage(inviteWallet.address),
-        //   link_signature: userWallet.signMessage(userWallet.address),
-        // });
+        await axios.post(process.env.REACT_APP_INVITE_URL, {
+          invite_address: inviteWallet.address,
+          link_address: userWallet.address,
+          invite_signature: inviteWallet.signMessage(inviteWallet.address),
+          link_signature: userWallet.signMessage(userWallet.address),
+        });
       }
 
       setStep(Steps.Complete);

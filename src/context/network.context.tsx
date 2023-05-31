@@ -37,8 +37,11 @@ if (process.env.REACT_APP_ENVIRONMENT === "LOCALHOST") {
   });
 }
 
+export const mainNetworkLabel =
+  process.env.REACT_APP_ENVIRONMENT === "LOCALHOST" ? "FDP Play" : "Sepolia";
+
 export function getMainNetwork(): Network {
-  return networks.find(({ label }) => label === "Sepolia") as Network;
+  return networks.find(({ label }) => label === mainNetworkLabel) as Network;
 }
 
 export interface NetworkContext {

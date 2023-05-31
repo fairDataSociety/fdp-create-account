@@ -34,6 +34,7 @@ jobs:
               echo "REACT_APP_ENVIRONMENT=GOERLI" >> "$GITHUB_ENV"
               echo "REACT_APP_WEB3_MODAL_PROJECT_ID=${{ secrets.REACT_APP_WEB3_MODAL_PROJECT_ID }}" >> "$GITHUB_ENV"
               echo "REACT_APP_ALCHEMY_API_KEY=$REACT_APP_ALCHEMY_API_KEY" >> "$GITHUB_ENV"
+              echo "REACT_APP_INVITE_URL=https://bigbang-api.fairdatasociety.org/invite/create" >> "$GITHUB_ENV"
               echo "PURGE_URL=https://app.fairdrive.fairdatasociety.org" >> "$GITHUB_ENV"
               echo "SWARM_URL=https://gateway.fairdatasociety.org/proxy/" >> "$GITHUB_ENV"
               echo "SIGNER=SIGNER_$GITHUB_REF_NAME" >> "$GITHUB_ENV"
