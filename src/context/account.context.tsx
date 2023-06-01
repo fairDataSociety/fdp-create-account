@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { createContext, useContext } from "react";
 import { BigNumber, providers, utils, Wallet } from "ethers";
 import { ENS } from "@fairdatasociety/fdp-contracts-js";
@@ -30,6 +30,8 @@ function getAlchemySettings(network: Network): AlchemySettings | null {
 }
 
 export interface AccountContext {
+  inviteKey: string | null;
+  setInviteKey: (key: string) => void;
   generateWallet: () => Promise<RegisterResponse>;
   getAccountBalance: (account: Account) => Promise<BigNumber>;
   checkMinBalance: (
@@ -45,6 +47,8 @@ export interface AccountContext {
 }
 
 const AccountContext = createContext<AccountContext>({
+  inviteKey: null,
+  setInviteKey: (key: string) => {},
   generateWallet: () => Promise.resolve(null as unknown as RegisterResponse),
   getAccountBalance: () => Promise.resolve(BigNumber.from(0)),
   checkMinBalance: () => Promise.resolve(false),
@@ -58,6 +62,7 @@ export interface AccountContextProps {
 }
 
 export const AccountProvider = ({ children }: AccountContextProps) => {
+  const [inviteKey, setInviteKey] = useState<string | null>(null);
   const { currentNetwork } = useNetworks();
 
   const provider = useMemo(
@@ -133,6 +138,8 @@ export const AccountProvider = ({ children }: AccountContextProps) => {
   return (
     <AccountContext.Provider
       value={{
+        inviteKey,
+        setInviteKey,
         generateWallet,
         getAccountBalance,
         checkMinBalance,

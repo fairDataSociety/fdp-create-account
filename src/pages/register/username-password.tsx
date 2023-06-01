@@ -7,8 +7,9 @@ import { RegisterData } from "../../model/internal-messages.model";
 import { useFdpStorage } from "../../context/fdp.context";
 import { isPasswordValid } from "../../utils/ens.utils";
 import Disclaimer from "../../components/disclaimer/disclaimer.component";
-import { useNetworks } from "../../context/network.context";
+import { getMainNetwork, useNetworks } from "../../context/network.context";
 import { Network } from "../../model/network.model";
+import { useAccount } from "../../context/account.context";
 
 export interface UsernamePasswordProps {
   onSubmit: (data: RegisterData) => void;
@@ -27,6 +28,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
     formState: { errors },
   } = useForm<FormFields>();
   const { updateFdpClient } = useFdpStorage();
+  const { inviteKey } = useAccount();
   const { networks, currentNetwork } = useNetworks();
   const [loading, setLoading] = useState<boolean>(false);
   const [usernameError, setUsernameError] = useState<string | null>(null);
@@ -131,23 +133,31 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         }
         data-testid="password"
       />
-      <Select
-        defaultValue={currentNetwork.label}
-        variant="outlined"
-        fullWidth
-        disabled={loading}
-        data-testid="network"
-        {...register("networkLabel", { required: true })}
-        sx={{
-          marginTop: "20px",
-        }}
-      >
-        {networks.map(({ label }) => (
-          <MenuItem key={label} value={label}>
-            {label}
-          </MenuItem>
-        ))}
-      </Select>
+      {inviteKey ? (
+        <input
+          type="hidden"
+          value={getMainNetwork().label}
+          {...register("networkLabel", { required: true })}
+        />
+      ) : (
+        <Select
+          defaultValue={currentNetwork.label}
+          variant="outlined"
+          fullWidth
+          disabled={loading}
+          data-testid="network"
+          {...register("networkLabel", { required: true })}
+          sx={{
+            marginTop: "20px",
+          }}
+        >
+          {networks.map(({ label }) => (
+            <MenuItem key={label} value={label}>
+              {label}
+            </MenuItem>
+          ))}
+        </Select>
+      )}
       <Button
         color="primary"
         variant="contained"

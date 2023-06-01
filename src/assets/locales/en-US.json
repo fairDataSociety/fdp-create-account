@@ -50,5 +50,9 @@
   "DISCLAIMER": "Disclaimer: Account integrity persistence and security are not assured. Expect that funds used for account might be lost, as well as any data the account uses.",
   "TESTNET_INFO": "Running on testnet - you are creating an account on the testnet.",
   "HOW_TO_USE_ACCOUNT_1": "You can use your account to login into ",
-  "HOW_TO_USE_ACCOUNT_2": " and other dApps!"
+  "HOW_TO_USE_ACCOUNT_2": " and other dApps!",
+  "FAUCETS_DESCRIPTION": "You can fund your account using one of the available faucets. Check this ",
+  "LINK": "link",
+  "SEPOLIA_FAUCETS": "Sepolia faucets",
+  "FAUCETS_INSTRUCTIONS": "Here you can find a list of faucets to get funds for your new account:"
 }
