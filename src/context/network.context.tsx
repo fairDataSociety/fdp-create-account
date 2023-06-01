@@ -11,7 +11,7 @@ export const networks: Network[] = [
   // TODO Replace with default ENS config when becomes available
   {
     label: "Sepolia",
-    minBalance: utils.parseUnits("0.002", "ether"),
+    minBalance: utils.parseUnits("0.001", "ether"),
     config: {
       rpcUrl: "https://rpc.sepolia.org/",
       contractAddresses: {
