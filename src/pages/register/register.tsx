@@ -66,6 +66,7 @@ const Register = () => {
     currentNetwork.minBalance
   );
   const [data, setData] = useState<RegistrationState>(emptyState);
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const getMinBalance = async () => {
@@ -171,11 +172,13 @@ const Register = () => {
     try {
       setStep(Steps.Loading);
       const wallet = new Wallet(inviteKey as string);
+      setLoadingMessage("CHECKING_BALANCE");
       const balance = await getAccountBalance(wallet.address);
       // TODO The value should be checked
       const gasPrice = utils.parseUnits("0.0001", "ether");
 
       if (balance.gt(BigNumber.from(gasPrice))) {
+        setLoadingMessage("TRANSFERRING_FROM_INVITE");
         const tx = await sendFunds(
           currentNetwork.config.rpcUrl,
           inviteKey as string,
@@ -193,6 +196,8 @@ const Register = () => {
       console.error(error);
       setError((error as Error)?.message);
       setStep(Steps.Error);
+    } finally {
+      setLoadingMessage(null);
     }
   };
 
@@ -220,6 +225,8 @@ const Register = () => {
 
       fdpClient.account.setAccountFromMnemonic(mnemonic);
 
+      setLoadingMessage("CHECKING_BALANCE");
+
       const canProceed = await checkMinBalance(
         fdpClient.account.wallet?.address as string,
         minBalance
@@ -229,12 +236,15 @@ const Register = () => {
         throw new Error("Insufficient funds");
       }
 
+      setLoadingMessage("REGISTERING_NEW_ACCOUNT");
+
       await fdpClient.account.register(username, password);
 
       if (inviteKey && process.env.REACT_APP_INVITE_URL) {
         const inviteWallet = new Wallet(inviteKey);
         const userWallet = new Wallet(fdpClient.account.wallet!.privateKey);
 
+        setLoadingMessage("REGISTERING_INVITATION");
         await axios.post(process.env.REACT_APP_INVITE_URL, {
           invite_address: inviteWallet.address,
           link_address: userWallet.address,
@@ -248,6 +258,8 @@ const Register = () => {
       console.error(error);
       setError((error as Error)?.message);
       setStep(Steps.Error);
+    } finally {
+      setLoadingMessage(null);
     }
   };
 
@@ -275,6 +287,8 @@ const Register = () => {
       );
     } else if (step === Steps.Complete) {
       message = "REGISTRATION_COMPLETE";
+    } else if (step === Steps.Loading && loadingMessage) {
+      return intl.get(loadingMessage) + "...";
     }
 
     return message ? intl.get(message) : "";
@@ -283,6 +297,7 @@ const Register = () => {
   const reset = () => {
     setData(emptyState);
     setError(null);
+    setLoadingMessage(null);
     if (!data.account) {
       registerUser();
     } else if (data.balance) {

@@ -54,5 +54,9 @@
   "FAUCETS_DESCRIPTION": "You can fund your account using one of the available faucets. Check this ",
   "LINK": "link",
   "SEPOLIA_FAUCETS": "Sepolia faucets",
-  "FAUCETS_INSTRUCTIONS": "Here you can find a list of faucets to get funds for your new account:"
+  "FAUCETS_INSTRUCTIONS": "Here you can find a list of faucets to get funds for your new account:",
+  "CHECKING_BALANCE": "Checking account balance",
+  "TRANSFERRING_FROM_INVITE": "Transferring funds from invite account",
+  "REGISTERING_NEW_ACCOUNT": "Registering new account",
+  "REGISTERING_INVITATION": "Registering invitation"
 }
