@@ -9,6 +9,11 @@ import {
   waitForElementText,
   waitForElementTextByTestId,
 } from "./utils/page";
+import { Wallet } from "ethers";
+
+function getRandomString(): string {
+  return Math.random().toString().substring(2);
+}
 
 function extractTextFromSpan(
   wordElement: ElementHandle<Element>
@@ -76,14 +81,14 @@ async function fillUsernamePasswordForm(
   await (await getElementByTestId(page, "submit")).click();
 }
 
-const username = "testuser";
+const username = "testuser-" + getRandomString();
 const password = "pass1234567890";
 let mnemonic: string[];
+const privateKey =
+  "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d";
 
 describe("Successful registration tests", () => {
   let page: Page;
-  const privateKey =
-    "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d";
 
   beforeAll(async () => {
     page = await openIndex();
@@ -165,7 +170,7 @@ describe("Unsuccessful registration tests", () => {
 
 describe("Registration with an existing account", () => {
   let page: Page;
-  const username = "testuser2";
+  const username = "testuser2-" + getRandomString();
 
   beforeAll(async () => {
     page = await openIndex();
@@ -184,6 +189,55 @@ describe("Registration with an existing account", () => {
 
     await mnemonicInput.click();
     await mnemonicInput.type(mnemonic.join(" "));
+
+    await (await getElementByTestId(page, "submit")).click();
+
+    expect(await waitForElementTextByTestId(page, "complete")).toBeTruthy();
+  });
+});
+
+describe("Registration with an invite", () => {
+  let page: Page;
+  const username = "invited-user-" + getRandomString();
+
+  const createInviteWallet = async (): Promise<Wallet> => {
+    const wallet = Wallet.createRandom();
+
+    await sendFunds(privateKey, wallet.address, "0.1");
+
+    return wallet;
+  };
+
+  beforeAll(async () => {
+    const inviteWallet = await createInviteWallet();
+
+    page = await openIndex(`/#/I_${inviteWallet.privateKey.substring(2)}`);
+  });
+
+  afterAll(async () => {
+    await page.close();
+  });
+
+  test("Registration should generate new mnemonic after entering username/password", async () => {
+    await fillUsernamePasswordForm(page, username, password);
+
+    expect(await page.waitForSelector(dataTestId("mnemonic"))).toBeTruthy();
+  });
+
+  test("Should complete registration without sending fudnds", async () => {
+    mnemonic = await getMnemonic(page);
+    await (await getElementByTestId(page, "submit")).click();
+
+    const rightOrderWordElements = await getMnemonicConfirmationElements(
+      page,
+      mnemonic
+    );
+
+    await rightOrderWordElements.reduce(async (prevPromise, element) => {
+      await prevPromise;
+
+      return await element.click();
+    }, Promise.resolve());
 
     await (await getElementByTestId(page, "submit")).click();
 

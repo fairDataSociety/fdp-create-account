@@ -17,9 +17,11 @@ import { useFdpStorage } from "../../context/fdp.context";
 import RouteCodes from "../../routes/route-codes";
 import Link from "../../components/link/link";
 import RegistrationComplete from "./registration-complete";
-import { BigNumber, utils } from "ethers";
+import { BigNumber, Wallet, utils } from "ethers";
 import { useAccount } from "../../context/account.context";
 import { useNetworks } from "../../context/network.context";
+import { sendFunds } from "../../utils/account.utils";
+import axios from "axios";
 
 enum Steps {
   UsernamePassword,
@@ -55,7 +57,8 @@ const emptyState: RegistrationState = {
 
 const Register = () => {
   const { fdpClient } = useFdpStorage();
-  const { estimateGas, checkMinBalance } = useAccount();
+  const { estimateGas, checkMinBalance, inviteKey, getAccountBalance } =
+    useAccount();
   const { currentNetwork } = useNetworks();
 
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
@@ -63,6 +66,7 @@ const Register = () => {
     currentNetwork.minBalance
   );
   const [data, setData] = useState<RegistrationState>(emptyState);
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const getMinBalance = async () => {
@@ -86,7 +90,9 @@ const Register = () => {
       ...registerData,
     });
     setMinBalance(registerData.network.minBalance);
-    setStep(Steps.ChooseMethod);
+    if (!inviteKey) {
+      setStep(Steps.ChooseMethod);
+    }
   };
 
   const onNewAccountSelect = () => {
@@ -122,6 +128,9 @@ const Register = () => {
   };
 
   const onMnemonicConfirmed = () => {
+    if (inviteKey) {
+      return checkInviteAccount();
+    }
     setStep(Steps.WaitingPayment);
   };
 
@@ -159,6 +168,39 @@ const Register = () => {
     }
   };
 
+  const checkInviteAccount = async () => {
+    try {
+      setStep(Steps.Loading);
+      const wallet = new Wallet(inviteKey as string);
+      setLoadingMessage("CHECKING_BALANCE");
+      const balance = await getAccountBalance(wallet.address);
+      // TODO The value should be checked
+      const gasPrice = utils.parseUnits("0.0001", "ether");
+
+      if (balance.gt(BigNumber.from(gasPrice))) {
+        setLoadingMessage("TRANSFERRING_FROM_INVITE");
+        const tx = await sendFunds(
+          currentNetwork.config.rpcUrl,
+          inviteKey as string,
+          Wallet.fromMnemonic(data.mnemonic).address,
+          balance.sub(gasPrice)
+        );
+        await tx.wait();
+      }
+
+      if (balance.gte(minBalance)) {
+        return onPaymentConfirmed(`${utils.formatEther(balance)} ETH`);
+      }
+      setStep(Steps.WaitingPayment);
+    } catch (error) {
+      console.error(error);
+      setError((error as Error)?.message);
+      setStep(Steps.Error);
+    } finally {
+      setLoadingMessage(null);
+    }
+  };
+
   const onPaymentConfirmed = (balance: string) => {
     setStep(Steps.Loading);
     setData({
@@ -183,6 +225,8 @@ const Register = () => {
 
       fdpClient.account.setAccountFromMnemonic(mnemonic);
 
+      setLoadingMessage("CHECKING_BALANCE");
+
       const canProceed = await checkMinBalance(
         fdpClient.account.wallet?.address as string,
         minBalance
@@ -192,13 +236,30 @@ const Register = () => {
         throw new Error("Insufficient funds");
       }
 
+      setLoadingMessage("REGISTERING_NEW_ACCOUNT");
+
       await fdpClient.account.register(username, password);
+
+      if (inviteKey && process.env.REACT_APP_INVITE_URL) {
+        const inviteWallet = new Wallet(inviteKey);
+        const userWallet = new Wallet(fdpClient.account.wallet!.privateKey);
+
+        setLoadingMessage("REGISTERING_INVITATION");
+        await axios.post(process.env.REACT_APP_INVITE_URL, {
+          invite_address: inviteWallet.address,
+          link_address: userWallet.address,
+          invite_signature: inviteWallet.signMessage(inviteWallet.address),
+          link_signature: userWallet.signMessage(userWallet.address),
+        });
+      }
 
       setStep(Steps.Complete);
     } catch (error) {
       console.error(error);
       setError((error as Error)?.message);
       setStep(Steps.Error);
+    } finally {
+      setLoadingMessage(null);
     }
   };
 
@@ -226,6 +287,8 @@ const Register = () => {
       );
     } else if (step === Steps.Complete) {
       message = "REGISTRATION_COMPLETE";
+    } else if (step === Steps.Loading && loadingMessage) {
+      return intl.get(loadingMessage) + "...";
     }
 
     return message ? intl.get(message) : "";
@@ -234,6 +297,7 @@ const Register = () => {
   const reset = () => {
     setData(emptyState);
     setError(null);
+    setLoadingMessage(null);
     if (!data.account) {
       registerUser();
     } else if (data.balance) {
@@ -256,6 +320,17 @@ const Register = () => {
       setData(emptyState);
     }
   }, [step]);
+
+  useEffect(() => {
+    if (
+      step === Steps.UsernamePassword &&
+      data.username &&
+      data.password &&
+      inviteKey
+    ) {
+      onNewAccountSelect();
+    }
+  }, [step, data.username, data.password, inviteKey]);
 
   return (
     <Wrapper>

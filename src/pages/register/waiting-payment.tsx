@@ -12,7 +12,9 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import { useAccount } from "../../context/account.context";
-import { useNetworks } from "../../context/network.context";
+import { getMainNetwork, useNetworks } from "../../context/network.context";
+import { Link } from "react-router-dom";
+import RouteCodes from "../../routes/route-codes";
 
 export interface WaitingPaymentProps {
   account: Account;
@@ -116,6 +118,16 @@ const WaitingPayment = ({
             </div>
           )}
         </>
+      )}
+
+      {currentNetwork.label === getMainNetwork().label && (
+        <Typography variant="body1" color="secondary" sx={{ margin: "auto" }}>
+          {intl.get("FAUCETS_DESCRIPTION")}
+          <Link to={RouteCodes.faucets} target="_blank">
+            {intl.get("LINK")}
+          </Link>
+          .
+        </Typography>
       )}
 
       <Typography

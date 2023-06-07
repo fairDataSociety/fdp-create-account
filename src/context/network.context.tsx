@@ -11,7 +11,7 @@ export const networks: Network[] = [
   // TODO Replace with default ENS config when becomes available
   {
     label: "Sepolia",
-    minBalance: utils.parseUnits("0.002", "ether"),
+    minBalance: utils.parseUnits("0.001", "ether"),
     config: {
       rpcUrl: "https://rpc.sepolia.org/",
       contractAddresses: {
@@ -35,6 +35,13 @@ if (process.env.REACT_APP_ENVIRONMENT === "LOCALHOST") {
     minBalance: utils.parseUnits("0.01", "ether"),
     config: getEnsEnvironmentConfig(Environments.LOCALHOST),
   });
+}
+
+export const mainNetworkLabel =
+  process.env.REACT_APP_ENVIRONMENT === "LOCALHOST" ? "FDP Play" : "Sepolia";
+
+export function getMainNetwork(): Network {
+  return networks.find(({ label }) => label === mainNetworkLabel) as Network;
 }
 
 export interface NetworkContext {

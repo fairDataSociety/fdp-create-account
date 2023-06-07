@@ -1,9 +1,9 @@
 import { ElementHandle, Page } from "puppeteer";
 import { WEB_SERVER_URL } from "../config/constants";
 
-export async function openIndex(): Promise<Page> {
+export async function openIndex(path = ""): Promise<Page> {
   const extensionPage = await global.__BROWSER__.newPage();
-  await extensionPage.goto(WEB_SERVER_URL, {
+  await extensionPage.goto(WEB_SERVER_URL + path, {
     waitUntil: "networkidle0",
   });
 
