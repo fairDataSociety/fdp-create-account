@@ -15,6 +15,12 @@ jobs:
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
+      - name: set lower case owner name
+        run: |
+          echo "REPO_LC=${OWNER,,}" >>${GITHUB_ENV}
+        env:
+          OWNER: '${{ github.repository }}'
+
           #- name: set vars per branch
           #  env:
           #    REACT_APP_ALCHEMY_API_KEY: "${{ secrets.REACT_APP_ALCHEMY_API_KEY }}"
@@ -51,4 +57,4 @@ jobs:
             "REACT_APP_BLOCKCHAIN_INFO=${{ vars.REACT_APP_BLOCKCHAIN_INFO }}"
             "REACT_APP_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}"
             "REACT_APP_INVITE_URL=${{ vars.REACT_APP_INVITE_URL }}"
-          tags: fairdatasociety/${{ github.repository }}:latest
+          tags: ${{ env.REPO_LC }}:latest
