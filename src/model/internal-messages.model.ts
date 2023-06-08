@@ -13,6 +13,7 @@ export interface RegisterData {
   privateKey?: PrivateKey;
   mnemonic?: Mnemonic;
   network: NetworkModel;
+  allowDataSharing?: boolean;
 }
 
 export interface RegisterResponse {

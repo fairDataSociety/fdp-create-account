@@ -179,11 +179,15 @@ const Register = () => {
 
       if (balance.gt(BigNumber.from(gasPrice))) {
         setLoadingMessage("TRANSFERRING_FROM_INVITE");
+        const amount = balance.gt(minBalance.mul(2))
+          ? minBalance.mul(2)
+          : balance;
+
         const tx = await sendFunds(
           currentNetwork.config.rpcUrl,
           inviteKey as string,
           Wallet.fromMnemonic(data.mnemonic).address,
-          balance.sub(gasPrice)
+          amount.sub(gasPrice)
         );
         await tx.wait();
       }
@@ -217,7 +221,7 @@ const Register = () => {
 
   const registerUser = async () => {
     try {
-      const { username, password, mnemonic } = data;
+      const { username, password, mnemonic, allowDataSharing } = data;
 
       if (!mnemonic) {
         throw new Error("Mnemonic must be set in order to register account");
@@ -240,7 +244,7 @@ const Register = () => {
 
       await fdpClient.account.register(username, password);
 
-      if (inviteKey && process.env.REACT_APP_INVITE_URL) {
+      if (inviteKey && allowDataSharing && process.env.REACT_APP_INVITE_URL) {
         const inviteWallet = new Wallet(inviteKey);
         const userWallet = new Wallet(fdpClient.account.wallet!.privateKey);
 
