@@ -58,7 +58,7 @@ jobs:
           config-inline: |
             [registry."${{ secrets.REGISTRY_URL }}"]
               http = false
-              insecure = true
+              insecure = false
               ca=["/etc/docker/certs.d/${{ secrets.REGISTRY_URL }}/ca.crt"]
 
       -
