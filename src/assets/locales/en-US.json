@@ -58,5 +58,11 @@
   "CHECKING_BALANCE": "Checking account balance",
   "TRANSFERRING_FROM_INVITE": "Transferring funds from invite account",
   "REGISTERING_NEW_ACCOUNT": "Registering new account",
-  "REGISTERING_INVITATION": "Registering invitation"
+  "REGISTERING_INVITATION": "Registering invitation",
+  "DATA_SHARING_RULES": "Data sharing rules",
+  "DATA_SHARING_RULES_DESCRIPTION": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum expedita omnis nulla nesciunt quisquam amet consequatur pariatur numquam molestiae, recusandae illum beatae excepturi illo fuga culpa ea quod voluptas! Quis.",
+  "DATA_SHARING_CHECKBOX_LABEL": "Allow to share information about my account with 3rd parties",
+  "LEARN_MORE": "Learn more",
+  "BB_RULES": "BB Rules",
+  "BB_RULES_DESCRIPTION": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum expedita omnis nulla nesciunt quisquam amet consequatur pariatur numquam molestiae, recusandae illum beatae excepturi illo fuga culpa ea quod voluptas! Quis."
 }

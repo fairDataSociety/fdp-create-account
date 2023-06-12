@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import intl from "react-intl-universal";
 import { useForm } from "react-hook-form";
-import { Button, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import Form from "../../components/form/form.component";
 import { RegisterData } from "../../model/internal-messages.model";
 import { useFdpStorage } from "../../context/fdp.context";
@@ -10,6 +17,8 @@ import Disclaimer from "../../components/disclaimer/disclaimer.component";
 import { getMainNetwork, useNetworks } from "../../context/network.context";
 import { Network } from "../../model/network.model";
 import { useAccount } from "../../context/account.context";
+import { Link } from "react-router-dom";
+import RouteCodes from "../../routes/route-codes";
 
 export interface UsernamePasswordProps {
   onSubmit: (data: RegisterData) => void;
@@ -19,6 +28,7 @@ interface FormFields {
   username: string;
   password: string;
   networkLabel: string;
+  allowDataSharing?: boolean;
 }
 
 const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
@@ -46,6 +56,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
     username,
     password,
     networkLabel,
+    allowDataSharing,
   }: FormFields) => {
     try {
       const passError = validatePassword(password);
@@ -76,6 +87,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         password,
         privateKey: "",
         network,
+        allowDataSharing,
       });
     } catch (error) {
       const { message } = error as Error;
@@ -134,11 +146,24 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
         data-testid="password"
       />
       {inviteKey ? (
-        <input
-          type="hidden"
-          value={getMainNetwork().label}
-          {...register("networkLabel", { required: true })}
-        />
+        <>
+          <input
+            type="hidden"
+            value={getMainNetwork().label}
+            {...register("networkLabel", { required: true })}
+          />
+          <FormControlLabel
+            control={<Checkbox {...register("allowDataSharing")} />}
+            label={
+              <p>
+                {intl.get("DATA_SHARING_CHECKBOX_LABEL")}.&nbsp;
+                <Link to={RouteCodes.dataSharingRules} target="_blank">
+                  {intl.get("LEARN_MORE")}
+                </Link>
+              </p>
+            }
+          />
+        </>
       ) : (
         <Select
           defaultValue={currentNetwork.label}
