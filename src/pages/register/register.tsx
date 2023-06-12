@@ -221,7 +221,7 @@ const Register = () => {
 
   const registerUser = async () => {
     try {
-      const { username, password, mnemonic, allowDataSharing } = data;
+      const { username, password, mnemonic, allowDataSharing, account } = data;
 
       if (!mnemonic) {
         throw new Error("Mnemonic must be set in order to register account");
@@ -264,6 +264,15 @@ const Register = () => {
           );
         } catch (e) {}
       }
+
+      // not being able to update balance should not fail the whole registration process
+      try {
+        const balance = await getAccountBalance(account);
+        setData({
+          ...data,
+          balance: utils.formatEther(balance),
+        });
+      } catch (e) {}
 
       setStep(Steps.Complete);
     } catch (error) {
