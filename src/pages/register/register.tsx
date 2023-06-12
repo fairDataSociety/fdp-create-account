@@ -253,15 +253,16 @@ const Register = () => {
         setLoadingMessage("REGISTERING_INVITATION");
         // failing registration of invitation should not fail the whole registration process
         try {
-          await axios.post(`${process.env.REACT_APP_INVITE_URL}/v1/invite/link`, {
-            invite_address: inviteAddress,
-            account_address: accountAddress,
-            invite_signature: await inviteWallet.signMessage(accountAddress),
-            account_signature: await accountWallet.signMessage(inviteAddress),
-          })
-        } catch (e) {
-
-        }
+          await axios.post(
+            `${process.env.REACT_APP_INVITE_URL}/v1/invite/link`,
+            {
+              invite_address: inviteAddress,
+              account_address: accountAddress,
+              invite_signature: await inviteWallet.signMessage(accountAddress),
+              account_signature: await accountWallet.signMessage(inviteAddress),
+            }
+          );
+        } catch (e) {}
       }
 
       setStep(Steps.Complete);
@@ -341,6 +342,7 @@ const Register = () => {
     ) {
       onNewAccountSelect();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, data.username, data.password, inviteKey]);
 
   return (

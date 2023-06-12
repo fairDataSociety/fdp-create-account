@@ -30,6 +30,7 @@ const Invite = () => {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(onLoad, []);
 
   return null;

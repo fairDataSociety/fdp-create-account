@@ -44,13 +44,13 @@ export function getMainNetwork(): Network {
   return networks.find(({ label }) => label === mainNetworkLabel) as Network;
 }
 
-export interface NetworkContext {
+export interface INetworkContext {
   networks: Network[];
   currentNetwork: Network;
   setCurrentNetwork: (network: Network) => void;
 }
 
-const NetworkContext = createContext<NetworkContext>({
+const NetworkContext = createContext<INetworkContext>({
   networks,
   currentNetwork: networks[0],
   setCurrentNetwork: () => {},
