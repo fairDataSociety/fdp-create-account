@@ -11,6 +11,10 @@ jobs:
   test:
     name: runtime tests
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
     # env:
     # PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
     steps:
@@ -19,8 +23,10 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Install fdp-play
-        run: npm install -g @fairdatasociety/fdp-play
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Get npm cache directory
         id: npm-cache-dir
@@ -36,8 +42,11 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install npm deps
-        # if: steps.npm-cache.outputs.cache-hit != 'true'
+        if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci --cache .npm
+
+      - name: Install fdp-play
+        run: npm install -g @fairdatasociety/fdp-play
 
       - name: Run fdp-play
         run: fdp-play start -d --bee-version $BEE_VERSION
