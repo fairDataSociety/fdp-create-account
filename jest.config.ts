@@ -1,7 +1,7 @@
 import "jest";
 import { join } from "path";
 
-export default {
+const config = {
   moduleFileExtensions: ["ts", "js", "json"],
   testMatch: ["**/test/**/*.spec.ts"],
   transform: {
@@ -17,3 +17,5 @@ export default {
   testPathIgnorePatterns: ["/node_modules/"],
   moduleDirectories: ["node_modules"],
 };
+
+export default config;
