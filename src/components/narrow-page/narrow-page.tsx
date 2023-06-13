@@ -5,9 +5,9 @@ const NarrowPage = styled("div")({
   flexDirection: "column",
   maxWidth: "700px",
   minHeight: "500px",
-  marginTop: "30px",
-  width: "100%",
   margin: "auto",
+  marginTop: "50px",
+  width: "100%",
   "& > .MuiFormControl-root": {
     margin: "20px 0",
   },
