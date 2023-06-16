@@ -77,6 +77,7 @@ jobs:
             "REACT_APP_BLOCKCHAIN_INFO=${{ vars.REACT_APP_BLOCKCHAIN_INFO }}"
             "REACT_APP_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}"
             "REACT_APP_INVITE_URL=${{ vars.REACT_APP_INVITE_URL }}"
+            "REACT_APP_FAIRDRIVE_URL=${{ vars.REACT_APP_FAIRDRIVE_URL }}"
           tags: ${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:buildcache
           cache-to: type=registry,ref=${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:buildcache,mode=max
