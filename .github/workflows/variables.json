@@ -95,16 +95,6 @@
       "Name": "SWARM_URL",
       "Value": "https://gateway.fairdatasociety.org/proxy/",
       "Scope": {}
-    },
-    {
-      "Name": "SIGNER",
-      "Value": "SIGNER_$GITHUB_REF_NAME",
-      "Scope": {
-        "Environment": [
-          "main",
-          "development"
-        ]
-      }
     }
   ]
 }
