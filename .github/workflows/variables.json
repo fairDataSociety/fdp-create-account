@@ -98,7 +98,7 @@
     },
     {
       "Name": "SIGNER",
-      "Value": "SIGNER_$GITHUB_REF_NAME",
+      "Value": "SIGNER_#{DEPLOYMENT}",
       "Scope": {
         "Environment": [
           "main",
