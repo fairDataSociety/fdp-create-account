@@ -68,6 +68,8 @@ jobs:
       - name: update feed
         id: swarm-feed
         uses: ethersphere/swarm-actions/write-feed@latest
+        env: 
+          SIGNER: SIGNER_${{ github.ref_name}}
         with:
           bee-url: ${{ env.SWARM_URL }}
           reference: ${{ steps.swarm-upload.outputs.reference }}
