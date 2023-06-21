@@ -83,7 +83,7 @@
     },
     {
       "Name": "REACT_APP_INVITE_URL",
-      "Value": "https://bbapi.fairdatasociety.org/invite/create",
+      "Value": "https://bbapi.fairdatasociety.org",
       "Scope": {}
     },
     {
