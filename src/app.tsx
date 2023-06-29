@@ -27,30 +27,7 @@ import {
 import { NetworkProvider } from "./context/network.context";
 import { AccountProvider } from "./context/account.context";
 
-const gnosis: Chain = {
-  id: 100,
-  name: "Gnosis",
-  network: "xdai",
-  nativeCurrency: {
-    decimals: 18,
-    name: "XDAI",
-    symbol: "XDAI",
-  },
-  rpcUrls: {
-    default: "https://rpc.gnosischain.com",
-  },
-  blockExplorers: {
-    default: { name: "Gnosis scan", url: "https://gnosisscan.io" },
-  },
-  testnet: false,
-};
-const chains = [];
-
-if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
-  chains.push(chain.goerli);
-} else {
-  chains.push(gnosis);
-}
+const chains = [chain.goerli, chain.sepolia];
 
 // Wagmi client
 const { provider } = configureChains(chains, [

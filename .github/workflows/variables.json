@@ -63,12 +63,12 @@
     },
     {
       "Name": "REACT_APP_BLOCKCHAIN_INFO",
-      "Value": "GOERLI",
+      "Value": "SEPOLIA",
       "Scope": {}
     },
     {
       "Name": "REACT_APP_ENVIRONMENT",
-      "Value": "GOERLI",
+      "Value": "SEPOLIA",
       "Scope": {}
     },
     {
