@@ -18,7 +18,6 @@ import {
 import { Web3Modal } from "@web3modal/react";
 
 import {
-  Chain,
   chain,
   configureChains,
   createClient,
