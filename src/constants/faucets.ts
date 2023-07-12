@@ -1,11 +1,11 @@
 export const sepoliaFaucets = [
   {
-    name: "PoW faucet",
-    href: "https://sepolia-faucet.pk910.de/",
-  },
-  {
     name: "Alchemy",
     href: "https://sepoliafaucet.com/",
+  },
+  {
+    name: "PoW faucet",
+    href: "https://sepolia-faucet.pk910.de/",
   },
   {
     name: "QuickNode",
