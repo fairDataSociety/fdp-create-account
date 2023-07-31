@@ -22,6 +22,7 @@ import { useAccount } from "../../context/account.context";
 import { useNetworks } from "../../context/network.context";
 import { sendFunds } from "../../utils/account.utils";
 import axios from "axios";
+import { RegistrationRequest } from "@fairdatasociety/fdp-storage/dist/account/types";
 
 enum Steps {
   UsernamePassword,
@@ -66,6 +67,8 @@ const Register = () => {
     currentNetwork.minBalance
   );
   const [data, setData] = useState<RegistrationState>(emptyState);
+  const [registrationRequest, setRegistrationRequest] =
+    useState<RegistrationRequest | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -242,10 +245,24 @@ const Register = () => {
 
       setLoadingMessage("REGISTERING_NEW_ACCOUNT");
 
-      await fdpClient.account.register(username, password);
+      let request = registrationRequest;
+
+      if (
+        !request ||
+        request?.username !== username ||
+        request?.password !== password
+      ) {
+        request = fdpClient.account.createRegistrationRequest(
+          username,
+          password
+        );
+        setRegistrationRequest(request);
+      }
+
+      await fdpClient.account.register(request as RegistrationRequest);
 
       if (inviteKey && allowDataSharing && process.env.REACT_APP_INVITE_URL) {
-        const inviteWallet = new Wallet(inviteKey);
+        const inviteWallet = new Wallet(inviteKey as string);
         const accountWallet = new Wallet(fdpClient.account.wallet!.privateKey);
         const inviteAddress = inviteWallet.address.toLowerCase();
         const accountAddress = accountWallet.address.toLowerCase();
