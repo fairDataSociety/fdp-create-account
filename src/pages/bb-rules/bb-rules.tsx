@@ -1,10 +1,12 @@
 import { Box, Typography } from "@mui/material";
-import intl from "react-intl-universal";
 
 import Title from "../../components/title/title.component";
 import NarrowPage from "../../components/narrow-page/narrow-page";
+import { useLocales } from "../../context/locales.context";
 
 const BBRules = () => {
+  const { intl } = useLocales();
+
   return (
     <NarrowPage>
       <Box sx={{ flexGrow: 1, overflow: "hidden", px: 3 }}>

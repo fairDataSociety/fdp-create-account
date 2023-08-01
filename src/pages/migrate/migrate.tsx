@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import intl from "react-intl-universal";
 import { styled } from "@mui/system";
 import axios from "axios";
 import { Button, CircularProgress, Typography } from "@mui/material";
@@ -11,6 +10,7 @@ import Link from "../../components/link/link";
 import RouteCodes from "../../routes/route-codes";
 import { FlexColumnDiv, FlexDiv } from "../../components/utils/utils";
 import ErrorMessage from "../../components/error-message/error-message.component";
+import { useLocales } from "../../context/locales.context";
 
 enum Steps {
   UsernamePassword,
@@ -28,6 +28,7 @@ const LoaderWrapperDiv = styled("div")({
 const Migrate = () => {
   const [step, setStep] = useState<Steps>(Steps.UsernamePassword);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { intl } = useLocales();
 
   const migrate = async ({
     oldUsername,

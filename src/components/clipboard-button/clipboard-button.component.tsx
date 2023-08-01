@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import intl from "react-intl-universal";
 import { IconButton, Snackbar } from "@mui/material";
 import ContentCopy from "@mui/icons-material/ContentCopy";
+import { useLocales } from "../../context/locales.context";
 
 export interface ClipboardButtonProps {
   text: string;
@@ -11,6 +11,7 @@ const ClipboardButton = ({ text }: ClipboardButtonProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const [closeTimeoutHandle, setCloseTimeoutHandle] =
     useState<NodeJS.Timeout | null>(null);
+  const { intl } = useLocales();
 
   const onClick = () => {
     navigator.clipboard.writeText(text);
