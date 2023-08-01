@@ -1,6 +1,4 @@
 {
-  "WELCOME_TITLE": "Welcome to the Blossom browser extension",
-  "WELCOME_TEXT": "Create a new Fair Data Society account to start using the extension. Or login if you already have one.",
   "REGISTER": "Register",
   "ADDRESS": "Address",
   "BALANCE": "Balance",
@@ -64,5 +62,6 @@
   "DATA_SHARING_CHECKBOX_LABEL": "Allow to share information about my account with 3rd parties",
   "LEARN_MORE": "Learn more",
   "BB_RULES": "BB Rules",
-  "BB_RULES_DESCRIPTION": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum expedita omnis nulla nesciunt quisquam amet consequatur pariatur numquam molestiae, recusandae illum beatae excepturi illo fuga culpa ea quod voluptas! Quis."
+  "BB_RULES_DESCRIPTION": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsum expedita omnis nulla nesciunt quisquam amet consequatur pariatur numquam molestiae, recusandae illum beatae excepturi illo fuga culpa ea quod voluptas! Quis.",
+  "LANGUAGE": "Language"
 }

@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import { styled } from "@mui/system";
-import intl from "react-intl-universal";
 import { Button, Chip, Typography } from "@mui/material";
 import { FlexColumnDiv, FlexDiv } from "../../components/utils/utils";
 import { Mnemonic } from "../../model/general.types";
 import ClipboardButton from "../../components/clipboard-button/clipboard-button.component";
+import { useLocales } from "../../context/locales.context";
 
 export interface MnemonicProps {
   phrase: Mnemonic;
@@ -24,6 +24,7 @@ const NonSelectableDiv = styled("div")({
 
 const MnemonicComponent = ({ phrase, onConfirm }: MnemonicProps) => {
   const words = useMemo(() => phrase.split(" "), [phrase]);
+  const { intl } = useLocales();
 
   return (
     <FlexColumnDiv>

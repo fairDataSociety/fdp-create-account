@@ -1,11 +1,12 @@
 import { Box, Typography } from "@mui/material";
-import intl from "react-intl-universal";
-
 import Title from "../../components/title/title.component";
 import { sepoliaFaucets } from "../../constants/faucets";
 import FaucetLink from "./faucet-link";
+import { useLocales } from "../../context/locales.context";
 
 const Faucets = () => {
+  const { intl } = useLocales();
+
   return (
     <Box sx={{ flexGrow: 1, overflow: "hidden", px: 3 }}>
       <Title>{intl.get("SEPOLIA_FAUCETS")}</Title>

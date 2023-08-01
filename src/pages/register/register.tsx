@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
-import intl from "react-intl-universal";
 import Title from "../../components/title/title.component";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import UsernamePassword from "./username-password";
@@ -23,6 +22,7 @@ import { useNetworks } from "../../context/network.context";
 import { sendFunds } from "../../utils/account.utils";
 import axios from "axios";
 import { RegistrationRequest } from "@fairdatasociety/fdp-storage/dist/account/types";
+import { useLocales } from "../../context/locales.context";
 
 enum Steps {
   UsernamePassword,
@@ -71,6 +71,7 @@ const Register = () => {
     useState<RegistrationRequest | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { intl } = useLocales();
 
   const getMinBalance = async () => {
     const wallet = fdpClient.account.wallet;

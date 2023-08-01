@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import intl from "react-intl-universal";
 import { useForm } from "react-hook-form";
 import {
   Button,
@@ -19,6 +18,7 @@ import { Network } from "../../model/network.model";
 import { useAccount } from "../../context/account.context";
 import { Link } from "react-router-dom";
 import RouteCodes from "../../routes/route-codes";
+import { useLocales } from "../../context/locales.context";
 
 export interface UsernamePasswordProps {
   onSubmit: (data: RegisterData) => void;
@@ -43,6 +43,7 @@ const UsernamePassword = ({ onSubmit }: UsernamePasswordProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const { intl } = useLocales();
 
   const validatePassword = (password: string): string | null => {
     if (!isPasswordValid(password)) {
