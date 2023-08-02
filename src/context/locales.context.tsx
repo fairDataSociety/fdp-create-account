@@ -12,6 +12,7 @@ import ptPtLocales from "../assets/locales/pt-PT.json";
 import rsRsLocales from "../assets/locales/rs-RS.json";
 import slSlLocales from "../assets/locales/sl-SI.json";
 import trTrLocales from "../assets/locales/tr-TR.json";
+import huHuLocales from "../assets/locales/hu-HU.json";
 
 const LOCAL_STORAGE_LOCALES_KEY = "lang";
 
@@ -22,6 +23,7 @@ const flagMap: Record<string, string> = {
   "es-ES": "🇪🇸",
   "fr-FR": "🇫🇷",
   "it-IT": "🇮🇹",
+  "hu-HU": "🇭🇺",
   "jp-JP": "🇯🇵",
   "pt-PT": "🇵🇹",
   "rs-RS": "🇷🇸",
@@ -66,6 +68,7 @@ function setLanguage(language: string) {
       "es-ES": esEsLocales,
       "fr-FR": frFrLocales,
       "it-IT": itItLocales,
+      "hu-HU": huHuLocales,
       "jp-JP": jpJpLocales,
       "pt-PT": ptPtLocales,
       "rs-RS": rsRsLocales,
