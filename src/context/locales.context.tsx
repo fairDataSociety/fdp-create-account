@@ -18,7 +18,7 @@ const LOCAL_STORAGE_LOCALES_KEY = "lang";
 const flagMap: Record<string, string> = {
   "ch-CH": "🇨🇳",
   "de-DE": "🇩🇪",
-  "en-US": "🇺🇸",
+  "en-US": "🇬🇧",
   "es-ES": "🇪🇸",
   "fr-FR": "🇫🇷",
   "it-IT": "🇮🇹",
