@@ -24,9 +24,14 @@ const LanguageSelect = ({ sx }: LanguageSelectProps) => {
         size="small"
         label={intl.get("LANGUAGE")}
         onChange={(event) => setCurrentLocale(event.target.value)}
+        sx={{ minWidth: "80px" }}
       >
         {languageCodes.map((languageCode) => (
-          <MenuItem value={languageCode} key={languageCode}>
+          <MenuItem
+            value={languageCode}
+            key={languageCode}
+            sx={{ justifyContent: "center" }}
+          >
             {getFlagCode(languageCode)}
           </MenuItem>
         ))}
