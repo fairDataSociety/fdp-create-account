@@ -27,7 +27,7 @@ const CenteredWrapper = ({ children }: CenteredWrapperProps) => {
     <>
       <WrapperDiv>
         <LanguageSelect sx={{ position: "absolute", top: 5, right: 5 }} />
-        <div style={{ position: "absolute", right: "100px" }}>
+        <div style={{ position: "absolute", top: 5, right: "100px" }}>
           <Web3Button />
         </div>
 
