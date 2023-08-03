@@ -6,36 +6,49 @@ import deDeLocales from "../assets/locales/de-DE.json";
 import enUsLocales from "../assets/locales/en-US.json";
 import esEsLocales from "../assets/locales/es-ES.json";
 import frFrLocales from "../assets/locales/fr-FR.json";
+import huHuLocales from "../assets/locales/hu-HU.json";
 import itItLocales from "../assets/locales/it-IT.json";
 import jpJpLocales from "../assets/locales/jp-JP.json";
 import ptPtLocales from "../assets/locales/pt-PT.json";
 import rsRsLocales from "../assets/locales/rs-RS.json";
 import slSlLocales from "../assets/locales/sl-SI.json";
 import trTrLocales from "../assets/locales/tr-TR.json";
-import huHuLocales from "../assets/locales/hu-HU.json";
+
+import cnFlag from "../assets/images/flags/cn.svg";
+import deFlag from "../assets/images/flags/de.svg";
+import enFlag from "../assets/images/flags/gb.svg";
+import esFlag from "../assets/images/flags/es.svg";
+import frFlag from "../assets/images/flags/fr.svg";
+import huFlag from "../assets/images/flags/hu.svg";
+import itFlag from "../assets/images/flags/it.svg";
+import jpFlag from "../assets/images/flags/jp.svg";
+import ptFlag from "../assets/images/flags/pt.svg";
+import rsFlag from "../assets/images/flags/rs.svg";
+import slFlag from "../assets/images/flags/si.svg";
+import trFlag from "../assets/images/flags/tr.svg";
 
 const LOCAL_STORAGE_LOCALES_KEY = "lang";
 
 const flagMap: Record<string, string> = {
-  "ch-CH": "🇨🇳",
-  "de-DE": "🇩🇪",
-  "en-US": "🇬🇧",
-  "es-ES": "🇪🇸",
-  "fr-FR": "🇫🇷",
-  "it-IT": "🇮🇹",
-  "hu-HU": "🇭🇺",
-  "jp-JP": "🇯🇵",
-  "pt-PT": "🇵🇹",
-  "rs-RS": "🇷🇸",
-  "sl-SI": "🇸🇮",
-  "tr-TR": "🇹🇷",
+  "ch-CH": cnFlag,
+  "de-DE": deFlag,
+  "en-US": enFlag,
+  "es-ES": esFlag,
+  "fr-FR": frFlag,
+  "hu-HU": huFlag,
+  "it-IT": itFlag,
+  "jp-JP": jpFlag,
+  "pt-PT": ptFlag,
+  "rs-RS": rsFlag,
+  "sl-SI": slFlag,
+  "tr-TR": trFlag,
 };
 
 export interface ILocalesContext {
   intl: typeof intl;
   currentLocale: string;
   languageCodes: string[];
-  getFlagCode: (language?: string) => string;
+  getFlagImage: (language?: string) => string;
   setCurrentLocale: (locale: string) => void;
 }
 
@@ -43,7 +56,7 @@ const LocalesContext = createContext<ILocalesContext>({
   intl,
   currentLocale: "en-US",
   languageCodes: [],
-  getFlagCode: () => "",
+  getFlagImage: () => "",
   setCurrentLocale: () => {},
 });
 
@@ -93,7 +106,8 @@ export const LocalesContextProvider = ({
     setCurrentLocale(locale);
   };
 
-  const getFlagCode = (language?: string) => flagMap[language || currentLocale];
+  const getFlagImage = (language?: string) =>
+    flagMap[language || currentLocale];
 
   return (
     <LocalesContext.Provider
@@ -101,7 +115,7 @@ export const LocalesContextProvider = ({
         intl,
         currentLocale,
         languageCodes,
-        getFlagCode,
+        getFlagImage,
         setCurrentLocale: changeCurrentLocale,
       }}
     >

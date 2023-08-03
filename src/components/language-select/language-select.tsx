@@ -1,4 +1,5 @@
 import React from "react";
+import { styled } from "@mui/system";
 import {
   FormControl,
   InputLabel,
@@ -13,8 +14,14 @@ interface LanguageSelectProps {
   sx?: SxProps<Theme>;
 }
 
+const FlagImage = styled("img")({
+  width: "30px",
+  margin: "auto",
+  border: "1px solid #ccc",
+});
+
 const LanguageSelect = ({ sx }: LanguageSelectProps) => {
-  const { intl, currentLocale, languageCodes, getFlagCode, setCurrentLocale } =
+  const { intl, currentLocale, languageCodes, getFlagImage, setCurrentLocale } =
     useLocales();
   return (
     <FormControl sx={sx}>
@@ -24,7 +31,12 @@ const LanguageSelect = ({ sx }: LanguageSelectProps) => {
         size="small"
         label={intl.get("LANGUAGE")}
         onChange={(event) => setCurrentLocale(event.target.value)}
-        sx={{ minWidth: "80px" }}
+        sx={{
+          minWidth: "80px",
+          "& .MuiInputBase-input": {
+            display: "flex",
+          },
+        }}
       >
         {languageCodes.map((languageCode) => (
           <MenuItem
@@ -32,7 +44,7 @@ const LanguageSelect = ({ sx }: LanguageSelectProps) => {
             key={languageCode}
             sx={{ justifyContent: "center" }}
           >
-            {getFlagCode(languageCode)}
+            <FlagImage src={getFlagImage(languageCode)} />
           </MenuItem>
         ))}
       </Select>
