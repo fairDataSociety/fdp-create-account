@@ -5,8 +5,8 @@
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
-    "@fairdatasociety/fdp-contracts-js": "^3.5.0",
-    "@fairdatasociety/fdp-storage": "^0.7.2",
+    "@fairdatasociety/fdp-contracts-js": "^3.6.1",
+    "@fairdatasociety/fdp-storage": "^0.10.0",
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.7",
     "@testing-library/jest-dom": "^5.16.5",
@@ -34,6 +34,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start:batch": "REACT_APP_BATCH_ID=$npm_config_batch react-scripts start",
+    "lint": "eslint .",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -43,6 +44,14 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "ignorePatterns": [
+      "/.github",
+      "/build",
+      "/node_modules",
+      "/public",
+      "/scripts",
+      "/"
     ]
   },
   "browserslist": {

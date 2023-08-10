@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/system";
-import intl from "react-intl-universal";
 import Title from "../../components/title/title.component";
 import { Button, CircularProgress, Typography } from "@mui/material";
 import UsernamePassword from "./username-password";
@@ -22,6 +21,8 @@ import { useAccount } from "../../context/account.context";
 import { useNetworks } from "../../context/network.context";
 import { sendFunds } from "../../utils/account.utils";
 import axios from "axios";
+import { RegistrationRequest } from "@fairdatasociety/fdp-storage/dist/account/types";
+import { useLocales } from "../../context/locales.context";
 
 enum Steps {
   UsernamePassword,
@@ -66,8 +67,11 @@ const Register = () => {
     currentNetwork.minBalance
   );
   const [data, setData] = useState<RegistrationState>(emptyState);
+  const [registrationRequest, setRegistrationRequest] =
+    useState<RegistrationRequest | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { intl } = useLocales();
 
   const getMinBalance = async () => {
     const wallet = fdpClient.account.wallet;
@@ -179,11 +183,15 @@ const Register = () => {
 
       if (balance.gt(BigNumber.from(gasPrice))) {
         setLoadingMessage("TRANSFERRING_FROM_INVITE");
+        const amount = balance.gt(minBalance.mul(2))
+          ? minBalance.mul(2)
+          : balance;
+
         const tx = await sendFunds(
           currentNetwork.config.rpcUrl,
           inviteKey as string,
           Wallet.fromMnemonic(data.mnemonic).address,
-          balance.sub(gasPrice)
+          amount.sub(gasPrice)
         );
         await tx.wait();
       }
@@ -217,7 +225,7 @@ const Register = () => {
 
   const registerUser = async () => {
     try {
-      const { username, password, mnemonic } = data;
+      const { username, password, mnemonic, allowDataSharing, account } = data;
 
       if (!mnemonic) {
         throw new Error("Mnemonic must be set in order to register account");
@@ -238,20 +246,51 @@ const Register = () => {
 
       setLoadingMessage("REGISTERING_NEW_ACCOUNT");
 
-      await fdpClient.account.register(username, password);
+      let request = registrationRequest;
 
-      if (inviteKey && process.env.REACT_APP_INVITE_URL) {
-        const inviteWallet = new Wallet(inviteKey);
-        const userWallet = new Wallet(fdpClient.account.wallet!.privateKey);
+      if (
+        !request ||
+        request?.username !== username ||
+        request?.password !== password
+      ) {
+        request = fdpClient.account.createRegistrationRequest(
+          username,
+          password
+        );
+        setRegistrationRequest(request);
+      }
+
+      await fdpClient.account.register(request as RegistrationRequest);
+
+      if (inviteKey && allowDataSharing && process.env.REACT_APP_INVITE_URL) {
+        const inviteWallet = new Wallet(inviteKey as string);
+        const accountWallet = new Wallet(fdpClient.account.wallet!.privateKey);
+        const inviteAddress = inviteWallet.address.toLowerCase();
+        const accountAddress = accountWallet.address.toLowerCase();
 
         setLoadingMessage("REGISTERING_INVITATION");
-        await axios.post(process.env.REACT_APP_INVITE_URL, {
-          invite_address: inviteWallet.address,
-          link_address: userWallet.address,
-          invite_signature: inviteWallet.signMessage(inviteWallet.address),
-          link_signature: userWallet.signMessage(userWallet.address),
-        });
+        // failing registration of invitation should not fail the whole registration process
+        try {
+          await axios.post(
+            `${process.env.REACT_APP_INVITE_URL}/v1/invite/link`,
+            {
+              invite_address: inviteAddress,
+              account_address: accountAddress,
+              invite_signature: await inviteWallet.signMessage(accountAddress),
+              account_signature: await accountWallet.signMessage(inviteAddress),
+            }
+          );
+        } catch (e) {}
       }
+
+      // not being able to update balance should not fail the whole registration process
+      try {
+        const balance = await getAccountBalance(account);
+        setData({
+          ...data,
+          balance: utils.formatEther(balance),
+        });
+      } catch (e) {}
 
       setStep(Steps.Complete);
     } catch (error) {
@@ -330,6 +369,7 @@ const Register = () => {
     ) {
       onNewAccountSelect();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, data.username, data.password, inviteKey]);
 
   return (

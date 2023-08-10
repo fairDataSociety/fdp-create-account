@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import intl from "react-intl-universal";
 import { Button, Checkbox, FormControlLabel, TextField } from "@mui/material";
 import ErrorMessage from "../../components/error-message/error-message.component";
 import { useForm } from "react-hook-form";
+import { useLocales } from "../../context/locales.context";
 
 interface FormFields {
   mnemonic: string;
@@ -20,6 +20,7 @@ const EnterMnemonic = ({ onSubmit }: EnterMnemonicProps) => {
   } = useForm<FormFields>();
   const [showMnemonic, setShowMnemonic] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const { intl } = useLocales();
 
   const onSubmitInternal = ({ mnemonic }: FormFields) => {
     if (mnemonic.trim().split(" ").length !== 12) {

@@ -21,13 +21,13 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-  
+
       - name: Set environment specific variables
         uses: jnus/json-variables@v1.0
         with:
           scope: ${{ github.ref_name }}
-          configFile: '.github/workflows/variables.json'
-          secrets: '${{ toJson(secrets.github_token) }}'
+          configFile: ".github/workflows/variables.json"
+          secrets: "${{ toJson(secrets.github_token) }}"
 
       - name: Cache node modules
         id: cache-npm
@@ -69,7 +69,7 @@ jobs:
         id: swarm-feed
         uses: ethersphere/swarm-actions/write-feed@latest
         env:
-          SIGNER: SIGNER_${{ github.ref_name }}
+          SIGNER: SIGNER_${{ github.ref_name}}
         with:
           bee-url: ${{ env.SWARM_URL }}
           reference: ${{ steps.swarm-upload.outputs.reference }}

@@ -3,9 +3,9 @@ name: buildx
 on:
   push:
     branches:
-      - 'main'
-      - 'development'
-      - 'staging'
+      - "main"
+      - "development"
+      - "staging"
 
 jobs:
   docker:
@@ -14,13 +14,13 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-  
+
       - name: Set environment specific variables
         uses: jnus/json-variables@v1.0
         with:
           scope: ${{ github.ref_name }}
-          configFile: '.github/workflows/variables.json'
-          secrets: '${{ toJson(secrets.github_token) }}'
+          configFile: ".github/workflows/variables.json"
+          secrets: "${{ toJson(secrets.github_token) }}"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -41,7 +41,7 @@ jobs:
         run: |
           echo "REPO_LC=${OWNER,,}" >>${GITHUB_ENV}
         env:
-          OWNER: '${{ env.REPO_NAME }}'
+          OWNER: "${{ env.REPO_NAME }}"
 
       - name: copy ca
         run: |
@@ -63,7 +63,7 @@ jobs:
         with:
           includeVars: ${{ toJson(env) }}
           includeSecrets: ${{ toJson(secrets) }}
-          
+
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -74,7 +74,7 @@ jobs:
           tags: ${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:${{ github.sha }},${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:${{ github.ref_name }}
           cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:buildcache
           cache-to: type=registry,ref=${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:buildcache,mode=max
-  
+
   notify-servers:
     needs: docker
     uses: fairdatasociety/ci_utils/.github/workflows/webhook.yml@main

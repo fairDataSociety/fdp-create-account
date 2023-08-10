@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import intl from "react-intl-universal";
 import { useForm } from "react-hook-form";
 import { useFdpStorage } from "../../context/fdp.context";
 import Form from "../../components/form/form.component";
 import { MigrateData } from "../../model/internal-messages.model";
 import { Button, Checkbox, FormControlLabel, TextField } from "@mui/material";
+import { useLocales } from "../../context/locales.context";
 
 export interface MigrateFormProps {
   onSubmit: (data: MigrateData) => void;
@@ -27,6 +27,7 @@ const MigrateForm = ({ onSubmit }: MigrateFormProps) => {
   const [usernameTaken, setUsernameTaken] = useState<boolean>(false);
   const [networkError, setNetworkError] = useState<boolean>(false);
   const [sameUsername, setSameUsername] = useState<boolean>(true);
+  const { intl } = useLocales();
 
   const onSubmitInternal = async ({
     oldUsername,

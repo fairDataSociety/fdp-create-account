@@ -29,7 +29,7 @@ function getAlchemySettings(network: Network): AlchemySettings | null {
   }
 }
 
-export interface AccountContext {
+export interface IAccountContext {
   inviteKey: string | null;
   setInviteKey: (key: string) => void;
   generateWallet: () => Promise<RegisterResponse>;
@@ -46,7 +46,7 @@ export interface AccountContext {
   ) => Promise<BigNumber>;
 }
 
-const AccountContext = createContext<AccountContext>({
+const AccountContext = createContext<IAccountContext>({
   inviteKey: null,
   setInviteKey: (key: string) => {},
   generateWallet: () => Promise.resolve(null as unknown as RegisterResponse),
@@ -71,7 +71,14 @@ export const AccountProvider = ({ children }: AccountContextProps) => {
   );
 
   const ens = useMemo(
-    () => new ENS(currentNetwork.config, provider, FDS_DOMAIN),
+    () =>
+      new ENS(
+        currentNetwork.label === "Sepolia"
+          ? { ...currentNetwork.config, rpcUrl: "http://rpc.sepolia.org" }
+          : currentNetwork.config,
+        provider,
+        FDS_DOMAIN
+      ),
     [currentNetwork, provider]
   );
 

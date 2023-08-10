@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { styled } from "@mui/system";
-import intl from "react-intl-universal";
 import { shuffleArray } from "../../utils/array.utils";
 import { FlexColumnDiv } from "../../components/utils/utils";
 import { Button, Chip, Typography } from "@mui/material";
 import { Mnemonic } from "../../model/general.types";
+import { useLocales } from "../../context/locales.context";
 
 export interface MnemonicConfirmationProps {
   phrase: Mnemonic;
@@ -33,6 +33,7 @@ const MnemonicConfirmation = ({
     () => shuffleArray(phrase.split(" ")),
     [phrase]
   );
+  const { intl } = useLocales();
 
   const isSelected = (index: number): boolean => {
     return selected.indexOf(index) >= 0;

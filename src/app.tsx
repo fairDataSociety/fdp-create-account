@@ -3,11 +3,10 @@ import { ThemeProvider } from "@mui/system";
 import { HashRouter } from "react-router-dom";
 import { CssBaseline, Typography } from "@mui/material";
 import defaultTheme from "./style/light-theme";
-import { LocalesContextProvider } from "./context/locales.context";
+import { LocalesContextProvider, useLocales } from "./context/locales.context";
 import Routes from "./routes/routes";
 import CenteredWrapper from "./components/centered-wrapper/centered-wrapper.component";
 import { FdpStorageProvider } from "./context/fdp.context";
-import intl from "react-intl-universal";
 import Footer from "./components/footer/footer";
 import {
   EthereumClient,
@@ -17,40 +16,11 @@ import {
 
 import { Web3Modal } from "@web3modal/react";
 
-import {
-  Chain,
-  chain,
-  configureChains,
-  createClient,
-  WagmiConfig,
-} from "wagmi";
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { NetworkProvider } from "./context/network.context";
 import { AccountProvider } from "./context/account.context";
 
-const gnosis: Chain = {
-  id: 100,
-  name: "Gnosis",
-  network: "xdai",
-  nativeCurrency: {
-    decimals: 18,
-    name: "XDAI",
-    symbol: "XDAI",
-  },
-  rpcUrls: {
-    default: "https://rpc.gnosischain.com",
-  },
-  blockExplorers: {
-    default: { name: "Gnosis scan", url: "https://gnosisscan.io" },
-  },
-  testnet: false,
-};
-const chains = [];
-
-if (process.env.REACT_APP_ENVIRONMENT === "GOERLI") {
-  chains.push(chain.goerli);
-} else {
-  chains.push(gnosis);
-}
+const chains = [chain.goerli, chain.sepolia];
 
 // Wagmi client
 const { provider } = configureChains(chains, [
@@ -68,6 +38,7 @@ const wagmiClient = createClient({
 const ethereumClient = new EthereumClient(wagmiClient, chains);
 
 const App = () => {
+  const { intl } = useLocales();
   useEffect(() => {
     document.title = "Fair Data Society";
   }, []);

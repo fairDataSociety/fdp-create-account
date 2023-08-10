@@ -4,27 +4,21 @@
       "Name": "DEPLOYMENT",
       "Value": ".",
       "Scope": {
-        "Environment": [
-          "main"
-        ]
+        "Environment": ["main"]
       }
     },
     {
       "Name": "DEPLOYMENT",
       "Value": ".dev.",
       "Scope": {
-        "Environment": [
-          "development"
-        ]
+        "Environment": ["development"]
       }
     },
     {
       "Name": "DEPLOYMENT",
       "Value": ".staging.",
       "Scope": {
-        "Environment": [
-          "staging"
-        ]
+        "Environment": ["staging"]
       }
     },
     {
@@ -46,29 +40,24 @@
       "Name": "REACT_APP_FAIRDRIVE_URL",
       "Value": "https://app.fairdrive#{DEPLOYMENT}fairdatasociety.org",
       "Scope": {
-        "Environment": [
-          "main",
-          "development"
-        ]
+        "Environment": ["main", "development"]
       }
     },
     {
       "Name": "REACT_APP_FAIRDRIVE_URL",
       "Value": "https://fairdrive#{DEPLOYMENT}fairdatasociety.org",
       "Scope": {
-        "Environment": [
-          "staging"
-        ]
+        "Environment": ["staging"]
       }
     },
     {
       "Name": "REACT_APP_BLOCKCHAIN_INFO",
-      "Value": "GOERLI",
+      "Value": "SEPOLIA",
       "Scope": {}
     },
     {
       "Name": "REACT_APP_ENVIRONMENT",
-      "Value": "GOERLI",
+      "Value": "SEPOLIA",
       "Scope": {}
     },
     {
@@ -83,7 +72,7 @@
     },
     {
       "Name": "REACT_APP_INVITE_URL",
-      "Value": "https://bbapi.fairdatasociety.org/invite/create",
+      "Value": "https://bbapi.fairdatasociety.org",
       "Scope": {}
     },
     {
