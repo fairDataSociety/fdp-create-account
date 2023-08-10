@@ -1,7 +1,7 @@
 import React from "react";
-import intl from "react-intl-universal";
 import { styled } from "@mui/system";
 import { Typography } from "@mui/material";
+import { useLocales } from "../../context/locales.context";
 
 export interface DisclaimerProps {}
 
@@ -12,6 +12,8 @@ const Box = styled("div")(({ theme }) => ({
 }));
 
 const Disclaimer = () => {
+  const { intl } = useLocales();
+
   return (
     <Box>
       <Typography>{intl.get("DISCLAIMER")}</Typography>

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { createContext, useContext } from "react";
 import { BigNumber, providers, utils, Wallet } from "ethers";
 import { ENS } from "@fairdatasociety/fdp-contracts-js";
@@ -29,7 +29,9 @@ function getAlchemySettings(network: Network): AlchemySettings | null {
   }
 }
 
-export interface AccountContext {
+export interface IAccountContext {
+  inviteKey: string | null;
+  setInviteKey: (key: string) => void;
   generateWallet: () => Promise<RegisterResponse>;
   getAccountBalance: (account: Account) => Promise<BigNumber>;
   checkMinBalance: (
@@ -44,7 +46,9 @@ export interface AccountContext {
   ) => Promise<BigNumber>;
 }
 
-const AccountContext = createContext<AccountContext>({
+const AccountContext = createContext<IAccountContext>({
+  inviteKey: null,
+  setInviteKey: (key: string) => {},
   generateWallet: () => Promise.resolve(null as unknown as RegisterResponse),
   getAccountBalance: () => Promise.resolve(BigNumber.from(0)),
   checkMinBalance: () => Promise.resolve(false),
@@ -58,6 +62,7 @@ export interface AccountContextProps {
 }
 
 export const AccountProvider = ({ children }: AccountContextProps) => {
+  const [inviteKey, setInviteKey] = useState<string | null>(null);
   const { currentNetwork } = useNetworks();
 
   const provider = useMemo(
@@ -66,7 +71,14 @@ export const AccountProvider = ({ children }: AccountContextProps) => {
   );
 
   const ens = useMemo(
-    () => new ENS(currentNetwork.config, provider, FDS_DOMAIN),
+    () =>
+      new ENS(
+        currentNetwork.label === "Sepolia"
+          ? { ...currentNetwork.config, rpcUrl: "http://rpc.sepolia.org" }
+          : currentNetwork.config,
+        provider,
+        FDS_DOMAIN
+      ),
     [currentNetwork, provider]
   );
 
@@ -133,6 +145,8 @@ export const AccountProvider = ({ children }: AccountContextProps) => {
   return (
     <AccountContext.Provider
       value={{
+        inviteKey,
+        setInviteKey,
         generateWallet,
         getAccountBalance,
         checkMinBalance,

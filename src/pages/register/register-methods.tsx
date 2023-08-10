@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "@mui/system";
-import intl from "react-intl-universal";
 import { Button } from "@mui/material";
+import { useLocales } from "../../context/locales.context";
 
 const Wrapper = styled("div")(({ theme }) => ({
   display: "flex",
@@ -28,6 +28,8 @@ const RegisterMethods = ({
   onNewAccountSelect,
   onExistingAccountSelect,
 }: RegisterMethodsProps) => {
+  const { intl } = useLocales();
+
   return (
     <Wrapper>
       <Button

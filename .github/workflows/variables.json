@@ -1,0 +1,100 @@
+{
+  "Variables": [
+    {
+      "Name": "DEPLOYMENT",
+      "Value": ".",
+      "Scope": {
+        "Environment": [
+          "main"
+        ]
+      }
+    },
+    {
+      "Name": "DEPLOYMENT",
+      "Value": ".dev.",
+      "Scope": {
+        "Environment": [
+          "development"
+        ]
+      }
+    },
+    {
+      "Name": "DEPLOYMENT",
+      "Value": ".staging.",
+      "Scope": {
+        "Environment": [
+          "staging"
+        ]
+      }
+    },
+    {
+      "Name": "REACT_APP_BEE_URL",
+      "Value": "https://bee-1.fairdatasociety.org",
+      "Scope": {}
+    },
+    {
+      "Name": "REACT_APP_BEE_DEBUG_URL",
+      "Value": "https://bee-1.fairdatasociety.org",
+      "Scope": {}
+    },
+    {
+      "Name": "REACT_APP_FAIROS_URL",
+      "Value": "https://fairos#{DEPLOYMENT}fairdatasociety.org",
+      "Scope": {}
+    },
+    {
+      "Name": "REACT_APP_FAIRDRIVE_URL",
+      "Value": "https://app.fairdrive#{DEPLOYMENT}fairdatasociety.org",
+      "Scope": {
+        "Environment": [
+          "main",
+          "development"
+        ]
+      }
+    },
+    {
+      "Name": "REACT_APP_FAIRDRIVE_URL",
+      "Value": "https://fairdrive#{DEPLOYMENT}fairdatasociety.org",
+      "Scope": {
+        "Environment": [
+          "staging"
+        ]
+      }
+    },
+    {
+      "Name": "REACT_APP_BLOCKCHAIN_INFO",
+      "Value": "SEPOLIA",
+      "Scope": {}
+    },
+    {
+      "Name": "REACT_APP_ENVIRONMENT",
+      "Value": "SEPOLIA",
+      "Scope": {}
+    },
+    {
+      "Name": "REACT_APP_WEB3_MODAL_PROJECT_ID",
+      "Value": "${{ secrets.REACT_APP_WEB3_MODAL_PROJECT_ID }}",
+      "Scope": {}
+    },
+    {
+      "Name": "REACT_APP_ALCHEMY_API_KEY",
+      "Value": "${{ secrets.REACT_APP_ALCHEMY_API_KEY }}",
+      "Scope": {}
+    },
+    {
+      "Name": "REACT_APP_INVITE_URL",
+      "Value": "https://bbapi.fairdatasociety.org",
+      "Scope": {}
+    },
+    {
+      "Name": "PURGE_URL",
+      "Value": "https://fairos#{DEPLOYMENT}fairdatasociety.org",
+      "Scope": {}
+    },
+    {
+      "Name": "SWARM_URL",
+      "Value": "https://gateway.fairdatasociety.org/proxy/",
+      "Scope": {}
+    }
+  ]
+}

@@ -11,21 +11,23 @@ export const networks: Network[] = [
   // TODO Replace with default ENS config when becomes available
   {
     label: "Sepolia",
-    minBalance: utils.parseUnits("0.002", "ether"),
-    config: {
-      rpcUrl: "https://rpc.sepolia.org/",
-      contractAddresses: {
-        ensRegistry: "0x42a96D45d787685ac4b36292d218B106Fb39be7F",
-        fdsRegistrar: "0xFBF00389140C00384d88d458239833E3231a7414",
-        publicResolver: "0xC904989B579c2B216A75723688C784038AA99B56",
-      },
-      performChecks: true,
-    },
+    minBalance: utils.parseUnits("0.0005", "ether"),
+    config: getEnsEnvironmentConfig(Environments.SEPOLIA),
   },
   {
     label: "Görli",
     config: getEnsEnvironmentConfig(Environments.GOERLI),
     minBalance: utils.parseUnits("0.05", "ether"),
+  },
+  {
+    label: "Optimism Goerli",
+    config: getEnsEnvironmentConfig(Environments.OPTIMISM_GOERLI),
+    minBalance: utils.parseUnits("0.001", "ether"),
+  },
+  {
+    label: "Arbitrum Goerli",
+    config: getEnsEnvironmentConfig(Environments.ARBITRUM_GOERLI),
+    minBalance: utils.parseUnits("0.001", "ether"),
   },
 ];
 
@@ -37,13 +39,20 @@ if (process.env.REACT_APP_ENVIRONMENT === "LOCALHOST") {
   });
 }
 
-export interface NetworkContext {
+export const mainNetworkLabel =
+  process.env.REACT_APP_ENVIRONMENT === "LOCALHOST" ? "FDP Play" : "Sepolia";
+
+export function getMainNetwork(): Network {
+  return networks.find(({ label }) => label === mainNetworkLabel) as Network;
+}
+
+export interface INetworkContext {
   networks: Network[];
   currentNetwork: Network;
   setCurrentNetwork: (network: Network) => void;
 }
 
-const NetworkContext = createContext<NetworkContext>({
+const NetworkContext = createContext<INetworkContext>({
   networks,
   currentNetwork: networks[0],
   setCurrentNetwork: () => {},

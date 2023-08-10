@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { BigNumber, utils } from "ethers";
-import intl from "react-intl-universal";
 import { styled } from "@mui/system";
 import { CircularProgress, Typography, Button } from "@mui/material";
 import { Account } from "../../model/general.types";
@@ -12,7 +11,10 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import { useAccount } from "../../context/account.context";
-import { useNetworks } from "../../context/network.context";
+import { getMainNetwork, useNetworks } from "../../context/network.context";
+import { Link } from "react-router-dom";
+import RouteCodes from "../../routes/route-codes";
+import { useLocales } from "../../context/locales.context";
 
 export interface WaitingPaymentProps {
   account: Account;
@@ -46,6 +48,7 @@ const WaitingPayment = ({
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
+  const { intl } = useLocales();
 
   const timer = useRef<NodeJS.Timeout | null>();
 
@@ -116,6 +119,16 @@ const WaitingPayment = ({
             </div>
           )}
         </>
+      )}
+
+      {currentNetwork.label === getMainNetwork().label && (
+        <Typography variant="body1" color="secondary" sx={{ margin: "auto" }}>
+          {intl.get("FAUCETS_DESCRIPTION")}
+          <Link to={RouteCodes.faucets} target="_blank">
+            {intl.get("LINK")}
+          </Link>
+          .
+        </Typography>
       )}
 
       <Typography

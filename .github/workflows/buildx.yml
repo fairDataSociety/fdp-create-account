@@ -3,17 +3,26 @@ name: buildx
 on:
   push:
     branches:
-      - 'main'
-      - 'development'
-      - 'staging'
+      - "main"
+      - "development"
+      - "staging"
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}
     steps:
-      -
-        name: Set up QEMU
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Set environment specific variables
+        uses: jnus/json-variables@v1.0
+        with:
+          scope: ${{ github.ref_name }}
+          configFile: ".github/workflows/variables.json"
+          secrets: "${{ toJson(secrets.github_token) }}"
+
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
       - name: Setup docker context for buildx
@@ -32,26 +41,14 @@ jobs:
         run: |
           echo "REPO_LC=${OWNER,,}" >>${GITHUB_ENV}
         env:
-          OWNER: '${{ env.REPO_NAME }}'
+          OWNER: "${{ env.REPO_NAME }}"
 
-          #- name: set vars per branch
-          #  env:
-          #    REACT_APP_ALCHEMY_API_KEY: "${{ secrets.REACT_APP_ALCHEMY_API_KEY }}"
-          #    REACT_APP_WEB3_MODAL_PROJECT_ID: "${{ secrets.REACT_APP_WEB3_MODAL_PROJECT_ID }}"
-          #    REACT_APP_BEE_URL: "${{ vars.REACT_APP_BEE_URL }}"
-          #    REACT_APP_BEE_DEBUG_URL: "${{ vars.REACT_APP_BEE_DEBUG_URL }}"
-          #    REACT_APP_FAIROS_URL: "${{ vars.REACT_APP_FAIROS_URL }}"
-          #    REACT_APP_BLOCKCHAIN_INFO: "${{ vars.REACT_APP_BLOCKCHAIN_INFO }}"
-          #    REACT_APP_ENVIRONMENT: "${{ vars.REACT_APP_ENVIRONMENT }}"
-          #    REACT_APP_INVITE_URL: "${{ vars.REACT_APP_INVITE_URL: }}"
-          #  id: vars
       - name: copy ca
         run: |
           sudo mkdir -p /etc/docker/certs.d/${{ secrets.REGISTRY_URL }}
           echo "${{ secrets.REGISTRY_CA }}" | sudo tee /etc/docker/certs.d/${{ secrets.REGISTRY_URL }}/ca.crt
 
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
           endpoint: builders
@@ -61,23 +58,20 @@ jobs:
               insecure = true
               ca=["/etc/docker/certs.d/${{ secrets.REGISTRY_URL }}/ca.crt"]
 
-      -
-        name: Build and push
+      - uses: bilberrry-infra/docker-build-args-action@master
+        id: action
+        with:
+          includeVars: ${{ toJson(env) }}
+          includeSecrets: ${{ toJson(secrets) }}
+
+      - name: Build and push
         uses: docker/build-push-action@v4
         with:
           push: true
           platforms: |
             linux/amd64
-          build-args: |
-            "REACT_APP_ALCHEMY_API_KEY=${{ secrets.REACT_APP_ALCHEMY_API_KEY }}"
-            "REACT_APP_WEB3_MODAL_PROJECT_ID=${{ secrets.REACT_APP_WEB3_MODAL_PROJECT_ID }}"
-            "REACT_APP_BEE_URL=${{ vars.REACT_APP_BEE_URL }}"
-            "REACT_APP_BEE_DEBUG_URL=${{ vars.REACT_APP_BEE_DEBUG_URL }}"
-            "REACT_APP_FAIROS_URL=${{ vars.REACT_APP_FAIROS_URL }}"
-            "REACT_APP_BLOCKCHAIN_INFO=${{ vars.REACT_APP_BLOCKCHAIN_INFO }}"
-            "REACT_APP_ENVIRONMENT=${{ vars.REACT_APP_ENVIRONMENT }}"
-            "REACT_APP_INVITE_URL=${{ vars.REACT_APP_INVITE_URL }}"
-          tags: ${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:${{ github.sha }}
+          build-args: ${{ steps.action.outputs.args }}
+          tags: ${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:${{ github.sha }},${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:${{ github.ref_name }}
           cache-from: type=registry,ref=${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:buildcache
           cache-to: type=registry,ref=${{ secrets.REGISTRY_URL }}/${{ env.REPO_LC }}:buildcache,mode=max
 

@@ -1,5 +1,4 @@
 import React from "react";
-import intl from "react-intl-universal";
 import DoneAll from "@mui/icons-material/DoneAll";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import AccountBalanceWallet from "@mui/icons-material/AccountBalanceWallet";
@@ -13,6 +12,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { useLocales } from "../../context/locales.context";
 
 export interface RegistrationCompleteProps {
   username: string;
@@ -42,6 +42,8 @@ const RegistrationComplete = ({
   account,
   balance,
 }: RegistrationCompleteProps) => {
+  const { intl } = useLocales();
+
   return (
     <FlexColumnDiv>
       <DoneAll sx={{ margin: "auto" }} data-testid="complete" />
