@@ -10,6 +10,7 @@ export interface Network {
       fdsRegistrar: string;
       publicResolver: string;
     };
+    gasEstimation: number;
     performChecks: boolean;
   };
 }
