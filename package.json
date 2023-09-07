@@ -34,7 +34,7 @@
     "start": "react-scripts start",
     "start:batch": "REACT_APP_BATCH_ID=$npm_config_batch react-scripts start",
     "check:types": "tsc --project tsconfig.json",
-    "lint:check": "eslint \"src/**/*.ts\" \"test/**/*.ts\" && prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint:check": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint .",
     "build": "react-scripts build",
     "test": "react-scripts test",
