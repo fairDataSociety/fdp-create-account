@@ -40,6 +40,12 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm ci --cache .npm
 
+      - name: Check types
+        run: npm run check:types
+
+      - name: Lint check
+        run: npm run lint:check
+
       - name: Install fdp-play
         run: npm install -g @fairdatasociety/fdp-play
 

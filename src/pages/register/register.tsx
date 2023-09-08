@@ -23,6 +23,7 @@ import { sendFunds } from "../../utils/account.utils";
 import axios from "axios";
 import { RegistrationRequest } from "@fairdatasociety/fdp-storage/dist/account/types";
 import { useLocales } from "../../context/locales.context";
+import { MULTIPLY_ETH_RESULT_FACTOR, roundWeiToEther } from '../../utils/eth.utils'
 
 enum Steps {
   UsernamePassword,
@@ -74,18 +75,9 @@ const Register = () => {
   const { intl } = useLocales();
 
   const getMinBalance = async () => {
-    const wallet = fdpClient.account.wallet;
-    const account = wallet?.address as string;
-    const publicKey = fdpClient.account.publicKey as string;
+    const price = await estimateGas(minBalance);
 
-    const price = await estimateGas(
-      data.username,
-      account,
-      publicKey,
-      minBalance
-    );
-
-    setMinBalance(price.mul(BigNumber.from(2)));
+    setMinBalance(price.mul(BigNumber.from(MULTIPLY_ETH_RESULT_FACTOR)));
   };
 
   const onUsernamePasswordSubmit = (registerData: RegisterData) => {
@@ -233,15 +225,19 @@ const Register = () => {
 
       fdpClient.account.setAccountFromMnemonic(mnemonic);
 
-      setLoadingMessage("CHECKING_BALANCE");
+      // if registration request is not set, check if user has enough balance
+      // otherwise it means that user continued registration process
+      if (!registrationRequest) {
+        setLoadingMessage("CHECKING_BALANCE");
 
-      const canProceed = await checkMinBalance(
-        fdpClient.account.wallet?.address as string,
-        minBalance
-      );
+        const canProceed = await checkMinBalance(
+            fdpClient.account.wallet?.address as string,
+            minBalance
+        );
 
-      if (!canProceed) {
-        throw new Error("Insufficient funds");
+        if (!canProceed) {
+          throw new Error("Insufficient funds");
+        }
       }
 
       setLoadingMessage("REGISTERING_NEW_ACCOUNT");
@@ -321,7 +317,7 @@ const Register = () => {
         intl.get(message) +
         " " +
         intl.get("WAITING_FOR_PAYMENT_AMOUNT", {
-          price: utils.formatEther(minBalance),
+          price: roundWeiToEther(minBalance),
         })
       );
     } else if (step === Steps.Complete) {
