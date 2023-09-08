@@ -44,14 +44,7 @@ export const AccountProvider = ({ children }: AccountContextProps) => {
   );
 
   const ens = useMemo(
-    () =>
-      new ENS(
-        currentNetwork.label === "Sepolia"
-          ? { ...currentNetwork.config, rpcUrl: "https://sepolia.dev.fairdatasociety.org/" }
-          : currentNetwork.config,
-        provider,
-        FDS_DOMAIN
-      ),
+    () => new ENS(currentNetwork.config, provider, FDS_DOMAIN),
     [currentNetwork, provider]
   );
 
