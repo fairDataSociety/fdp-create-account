@@ -23,7 +23,7 @@ import { sendFunds } from "../../utils/account.utils";
 import axios from "axios";
 import { RegistrationRequest } from "@fairdatasociety/fdp-storage/dist/account/types";
 import { useLocales } from "../../context/locales.context";
-import { roundWeiToEther } from '../../utils/eth.utils'
+import { MULTIPLY_ETH_RESULT_FACTOR, roundWeiToEther } from '../../utils/eth.utils'
 
 enum Steps {
   UsernamePassword,
@@ -75,18 +75,9 @@ const Register = () => {
   const { intl } = useLocales();
 
   const getMinBalance = async () => {
-    const wallet = fdpClient.account.wallet;
-    const account = wallet?.address as string;
-    const publicKey = fdpClient.account.publicKey as string;
+    const price = await estimateGas(minBalance);
 
-    const price = await estimateGas(
-      data.username,
-      account,
-      publicKey,
-      minBalance
-    );
-
-    setMinBalance(price.mul(BigNumber.from(2)));
+    setMinBalance(price.mul(BigNumber.from(MULTIPLY_ETH_RESULT_FACTOR)));
   };
 
   const onUsernamePasswordSubmit = (registerData: RegisterData) => {

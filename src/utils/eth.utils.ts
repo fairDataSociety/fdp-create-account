@@ -1,6 +1,11 @@
 import { BigNumber, ethers } from 'ethers'
 
 /**
+ * Multiply ETH result by this to get ETH amount with a margin
+ */
+export const MULTIPLY_ETH_RESULT_FACTOR = 2;
+
+/**
  * Rounds wei value to ether with maxDecimals
  * @param weiValue Wei value to round
  * @param maxDecimals Max decimals to round to

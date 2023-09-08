@@ -16,12 +16,7 @@ export interface IAccountContext {
     account: Account,
     minBalance: BigNumber
   ) => Promise<boolean>;
-  estimateGas: (
-    username: string,
-    account: string,
-    publicKey: string,
-    defaultMinBalance: BigNumber
-  ) => Promise<BigNumber>;
+  estimateGas: (defaultMinBalance: BigNumber) => Promise<BigNumber>;
 }
 
 const AccountContext = createContext<IAccountContext>({
@@ -89,18 +84,13 @@ export const AccountProvider = ({ children }: AccountContextProps) => {
     return balance.gte(minBalance);
   };
 
-  const estimateGas = async (
-    username: string,
-    account: string,
-    publicKey: string,
-    defaultMinBalance: BigNumber
-  ): Promise<BigNumber> => {
+  const estimateGas = (defaultMinBalance: BigNumber): Promise<BigNumber> => {
     try {
       return ens.registerUsernameApproximatePrice()
     } catch (error) {
       console.error(error);
 
-      return defaultMinBalance;
+      return Promise.resolve(defaultMinBalance);
     }
   };
 
