@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - development
-      - staging
 #env:
 
 jobs:
@@ -64,7 +62,8 @@ jobs:
           bee-url: ${{ env.SWARM_URL }}
           dir: ./build
           index-document: index.html
-          timeout: 200000
+          pin: true
+          timeout: 20000
       - name: update feed
         id: swarm-feed
         uses: ethersphere/swarm-actions/write-feed@latest
@@ -90,4 +89,4 @@ jobs:
         env:
           TOKEN: "${{ secrets.purge_token }}"
         run: |
-          curl -s ${{ env.PURGE_URL }}/deploy/purge?token=${{ secrets.purge_token }} -H "site: create${{ env.DEPLOYMENT }}fairdatasociety.org" -H "uri: "
+          curl -s ${{ env.PURGE_URL }}/deploy/purge?token=${{ secrets.purge_token }} -H "site: create${{ env.DEPLOYMENT }}fairdrive.io" -H "uri: *"
