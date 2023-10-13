@@ -23,7 +23,10 @@ import { sendFunds } from "../../utils/account.utils";
 import axios from "axios";
 import { RegistrationRequest } from "@fairdatasociety/fdp-storage/dist/account/types";
 import { useLocales } from "../../context/locales.context";
-import { MULTIPLY_ETH_RESULT_FACTOR, roundWeiToEther } from '../../utils/eth.utils'
+import {
+  MULTIPLY_ETH_RESULT_FACTOR,
+  roundWeiToEther,
+} from "../../utils/eth.utils";
 
 enum Steps {
   UsernamePassword,
@@ -231,8 +234,8 @@ const Register = () => {
         setLoadingMessage("CHECKING_BALANCE");
 
         const canProceed = await checkMinBalance(
-            fdpClient.account.wallet?.address as string,
-            minBalance
+          fdpClient.account.wallet?.address as string,
+          minBalance
         );
 
         if (!canProceed) {
@@ -330,16 +333,11 @@ const Register = () => {
   };
 
   const reset = () => {
-    setData(emptyState);
     setError(null);
     setLoadingMessage(null);
-    if (!data.account) {
-      registerUser();
-    } else if (data.balance) {
-      onPaymentConfirmed(data.balance);
-    } else {
-      setStep(Steps.WaitingPayment);
-    }
+    setStep(Steps.Loading);
+
+    registerUser();
   };
 
   useEffect(() => {
