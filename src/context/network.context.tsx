@@ -29,6 +29,11 @@ export const networks: Network[] = [
     config: getEnsEnvironmentConfig(Environments.ARBITRUM_GOERLI),
     minBalance: utils.parseUnits("0.001", "ether"),
   },
+  {
+    label: "zkEVM Testnet",
+    config: getEnsEnvironmentConfig(Environments.ZKEVM_TESTNET),
+    minBalance: utils.parseUnits("0.001", "ether"),
+  },
 ];
 
 if (process.env.REACT_APP_ENVIRONMENT === "LOCALHOST") {

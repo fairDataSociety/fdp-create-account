@@ -9,6 +9,8 @@ export interface Network {
       ensRegistry: string;
       fdsRegistrar: string;
       publicResolver: string;
+      reverseResolver: string;
+      nameResolver: string;
     };
     performChecks: boolean;
   };
