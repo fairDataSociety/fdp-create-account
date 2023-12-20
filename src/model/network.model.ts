@@ -12,6 +12,7 @@ export interface Network {
       reverseResolver: string;
       nameResolver: string;
     };
+    gasEstimation: number;
     performChecks: boolean;
     gasEstimation: number;
   };
