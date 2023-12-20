@@ -13,5 +13,6 @@ export interface Network {
       nameResolver: string;
     };
     performChecks: boolean;
+    gasEstimation: number;
   };
 }
